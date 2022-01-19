@@ -1,4 +1,4 @@
 ---
-title: Blog
+title: Tanz Dev
 layout: blog
 ---
