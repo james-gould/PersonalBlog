@@ -1,0 +1,1 @@
+bundle install | git add . | git commit -m "new post" | git pull | git push

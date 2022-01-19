@@ -1,0 +1,1 @@
+bundle exec jekyll serve | git add . | git commit -m "new post" | git pull | git push

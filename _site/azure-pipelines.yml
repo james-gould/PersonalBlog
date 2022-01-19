@@ -1,0 +1,15 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    submodules: true
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
+      azure_static_web_apps_api_token: $(deployment_token)
