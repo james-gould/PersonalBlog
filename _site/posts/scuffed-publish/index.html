@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Programming | Publishing Jekyll Blog via Azure Devops</title>
+  
+  <link rel="stylesheet" href="/assets/css/post.css" />
+  <link rel="stylesheet" href="/assets/css/syntax.css" />
+  
+  <link rel="stylesheet" href="/assets/css/common.css" />
+  <script src="/assets/js/categories.js"></script>
+  
+  <script defer src="/assets/js/lbox.js"></script>
+  
+</head>
+
+  <body>
+    <main>
+      <header>
+  <a class="site-title" href="/">Practical Programming</a>
+</header>
+
+      <section class="article">
+        <div class="article-header">
+          <h2 class="article-title">Publishing Jekyll Blog via Azure Devops</h2>
+          <small class="date">28 Jan 2022</small>
+          <div class="categories">
+            
+            <a href="#!" class="category">jekyll</a>
+            
+            <a href="#!" class="category">azure devops</a>
+            
+          </div>
+        </div>
+        <div class="content"><h1 id="introduction">Introduction</h1>
+
+<p>When deciding to build a blog there were a few options:</p>
+
+<ul>
+  <li>A custom domain name. Medium gets on my nerves and I wouldn’t want to inflict that on somebody else.</li>
+  <li>Easy mechanism to design and publish posts, markdown being the optimal choice.</li>
+  <li>A theme that was minimalistic but flexible.</li>
+</ul>
+
+<p>Initially I settled on <a href="https://hashnode.com/">Hashnode</a> which allowed easy setup, 1-click themes and a free custom domain name alias.</p>
+
+<p>After setting it up it was swiftly apparent how bloated the platform was. I just wanted somewhere to write up interesting topics, not participate in some global developer community where we all pass-the-upvote and #followback.</p>
+
+<p>With limited knowledge in the space I stumbled across Jekyll, an open source markdown-driven platform which generates static HTML from markdown files with an associated theme. Perfect!</p>
+
+<p>I got my site set up locally, got the theme installed (took some time) and got the build working so that updates I published would actually generate into the HTML.</p>
+
+<p>Next step: deployment.</p>
+
+<p>I’m no guru with CI/CD. I can pick apart pre-assembled YAML files and make them work, or follow a wizard to generate the tasks behind the scenes. If there’s a bug, I bin the lot off and start again. I just needed to find a way to build and publish the site to some web server every time I pushed a new post to the repository the blog sat on. Should be easy enough.</p>
+
+<h1 id="pragmatism">Pragmatism</h1>
+
+<p>I settled on an Azure Static Web App. It offers a generous free tier with an automatic SSL certificate, free domain mapping and I could easily deploy my static content manually via Kudu. I wanted to automate this step because I’m a lazy bugger, so I gave it a shot.</p>
+
+<p>Frankly I won’t waste your time at this stage with waffling on about my attempts to get various ruby scripts running, with artifacts being shoved around etc. There are guides out there if you’re interested - I couldn’t make heads nor tails of them.</p>
+
+<p>Here’s what I knew worked:</p>
+
+<ul>
+  <li>Locally the blog compiled and looked fine once running with <code class="language-plaintext highlighter-rouge">bundle exec jeykll serve</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">_site</code> directory compiled fully, taking new additions to the <code class="language-plaintext highlighter-rouge">all_collections/_posts</code> directory and building them into a HTML file.</li>
+</ul>
+
+<p>Now, cue the super scuffed approach to deploying this blog.</p>
+
+<h1 id="rules-are-meant-to-be-completely-deleted-from-the-file">Rules are meant to be completely deleted from the file</h1>
+
+<p>For this <em>pragmatic</em> guide we need to commit our first crime: removed the exclusion of <code class="language-plaintext highlighter-rouge">_site</code> from the <code class="language-plaintext highlighter-rouge">.gitignore</code>. How dreadful!</p>
+
+<h1 id="forgive-me-microsoft-for-i-have-sinned">Forgive me Microsoft for I have sinned.</h1>
+
+<p>Here’s the dreadful YAML file to use for publishing a single post. It’s not pretty, but it works. All in the name of getting it working without too much glitter:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    submodules: true
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
+      azure_static_web_apps_api_token: $(deployment_token)
+
+</code></pre></div></div>
+
+<p>At the root of your Jeykll blog add a new file called <code class="language-plaintext highlighter-rouge">azure-pipeline.yml</code> and add the above as the contents.</p>
+
+<p>Don’t worry about the <code class="language-plaintext highlighter-rouge">api_location: 'api'</code> section - it does nothing and frankly I’m scared to touch it.</p>
+
+<h1 id="azure-devops---im-sorry">Azure Devops - I’m sorry.</h1>
+
+<p>First, create the Azure Static Web App. Once it’s deployed, you should land on the dashboard for the resource:</p>
+
+<p><img src="https://i.imgur.com/WNGBMuU.png" alt="Azure Devops - Static Web App With Jekyll" /></p>
+
+<p>Here you can set up your custom domain if you like - the verification for the TXT DNS addition took 3 (!) days to fully detect in the portal. We’ll skip this step for now.</p>
+
+<p>Whilst on Overview, find the <code class="language-plaintext highlighter-rouge">Manage Deployment Token</code> button on the right hand side.</p>
+
+<p><img src="https://i.imgur.com/Mh4F6gs.png" alt="Azure Devops - Manage Deployment Token" /></p>
+
+<p>Click the button (of course), copy the token or keep the blade open for the next step.</p>
+
+<p>Go to your DevOps organisation -&gt; Project containing the blog repository -&gt; Pipelines.</p>
+
+<p><strong>You won’t have the “Blog” pipeline there, don’t worry!</strong></p>
+
+<p><img src="https://i.imgur.com/K71qLWI.png" alt="Azure Devops - New Pipeline for Jekyll Blog" /></p>
+
+<p>Click on new pipeline to begin sinning like me</p>
+
+<p><img src="https://i.imgur.com/W7X3oux.png" alt="Azure Devops - New Pipeline" /></p>
+
+<p>Select the <code class="language-plaintext highlighter-rouge">Azure Repos Git</code> option, assuming that’s where your blog repository is stored.</p>
+
+<p><img src="https://i.imgur.com/YklnYR7.png" alt="Azure Devops - VCS select" /></p>
+
+<p>Select your repository</p>
+
+<p><img src="https://i.imgur.com/xYX3uMb.png" alt="Azure devops - repo select" /></p>
+
+<p>Now that you’ve saved our sinful pipeline <code class="language-plaintext highlighter-rouge">.yml</code> file, select <em>Existing Azure Pipelines YAML file</em></p>
+
+<p><img src="https://i.imgur.com/RJPnFwo.png" alt="Azure Devops - Existing YAML file" /></p>
+
+<p>Select the <code class="language-plaintext highlighter-rouge">azure-pipelines.yml</code> file from the root directory. For whatever reason Jekyll builds a copy to the <code class="language-plaintext highlighter-rouge">_site</code> directory, be sure <strong>not</strong> to use that one. Click <code class="language-plaintext highlighter-rouge">Continue</code> once you’re done.</p>
+
+<p><img src="https://i.imgur.com/YSdGLO2.png" alt="Azure Devops - YML file select" /></p>
+
+<p>Our <del>great</del> functional pipeline text will load in</p>
+
+<p><img src="https://i.imgur.com/1GkALI3.png" alt="Azure Devops - Pipeline Review" /></p>
+
+<p>Now’s the time to link the pipeline to our new, shiny Azure Static Web App. Click <code class="language-plaintext highlighter-rouge">Variables</code> in the top right</p>
+
+<p><img src="https://i.imgur.com/7oKsEvr.png" alt="Azure Devops - Variables" /></p>
+
+<p>Click <code class="language-plaintext highlighter-rouge">New Variable</code></p>
+
+<p><img src="https://i.imgur.com/Ef6tOg9.png" alt="Azure Devops - New Variable" /></p>
+
+<p>If you take a look at the bottom of our <code class="language-plaintext highlighter-rouge">azure-pipelines</code> file, we have a <code class="language-plaintext highlighter-rouge">$variable</code> called <code class="language-plaintext highlighter-rouge">deployment_token</code>. That’s the name of our variable. Make sure to add the token from our Static Web App blade from earlier to the <code class="language-plaintext highlighter-rouge">value</code> field:</p>
+
+<p><img src="https://i.imgur.com/yY9rvt2.png" alt="Azure Devops - Variable Added" /></p>
+
+<p>You can mark it as secret if you like, I haven’t because my partner can’t even find the monitor power button let alone understand Azure Pipelines.</p>
+
+<p>You should see your new variable appear in the list, click save.</p>
+
+<p><img src="https://i.imgur.com/z448xg4.png" alt="Azure Devops - Variable saved" /></p>
+
+<p>Now save your pipeline by using the arrow on the <code class="language-plaintext highlighter-rouge">Run</code> button to show the hidden, very useful option</p>
+
+<p><img src="https://i.imgur.com/APPyFYX.png" alt="i cant be bothered anymore" /></p>
+
+<p>Awesome, your pipeline is set up. Now every time you push to <code class="language-plaintext highlighter-rouge">master</code>, the <code class="language-plaintext highlighter-rouge">_site</code> directory will deploy to your Azure Static Web App. <a href="https://www.youtube.com/watch?v=OUXvrWeQU0g">Please clap</a></p>
+
+<h1 id="building-and-publishing-your-site">Building and publishing your site</h1>
+
+<p>Now for the fun, extra scuffed section.</p>
+
+<p>Every time a new blog post gets added, we need to build the blog. This converts the <code class="language-plaintext highlighter-rouge">.md</code> files containing our very important ramblings into readable <code class="language-plaintext highlighter-rouge">HTML</code> files. How exciting!</p>
+
+<p>Now I’m lazy, if you couldn’t already tell. I can’t be bothered to write nice commits for things people will never see, so I wrote a <del>horrendous</del> functional script to speed this part up too.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec jekyll build | git add . | git commit -m "new post" | git pull | git push
+</code></pre></div></div>
+
+<p>Here we’re doing a few bits:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bundle exec jekyll build</code> builds the <code class="language-plaintext highlighter-rouge">.md</code> files into <code class="language-plaintext highlighter-rouge">.html</code> files for the posts.</li>
+  <li>Add all the new files to our repoitory.</li>
+  <li>Commit them with a very descriptive commit message.</li>
+  <li>Pull the latest changes in case we did a drunk ramble directly into DevOps (don’t judge me)</li>
+  <li>Push the changes locally.</li>
+</ul>
+
+<p>I threw that crap into a <code class="language-plaintext highlighter-rouge">.ps1</code> PowerShell script and added it to the root of my blog.</p>
+
+<p>Now, with the combined strength of our scuffed pipeline and horrendous git practices that my professors are definitely weeping at, we can write a new blog post and publish it with just a script. How far technology has come.</p>
+
+<h1 id="after-thoughts">After thoughts</h1>
+
+<p>I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.</p>
+
+<p>Enjoy!</p>
+</div>
+      </section>
+      <footer>
+  <p>&copy; 1947 - 2022 | Practical Programming</p>
+</footer>
+
+    </main>
+    <section id="category-modal-bg"></section>
+<section id="category-modal">
+  <h1 id="category-modal-title"></h1>
+  <section id="category-modal-content"></section>
+</section>
+
+  </body>
+</html>

@@ -1,1 +1,329 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-01-28T19:14:33+00:00</updated><id>/feed.xml</id><title type="html">Practical Programming</title><author><name>James Gould</name><email>contact@tanz.dev</email></author></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-01-28T19:20:52+00:00</updated><id>/feed.xml</id><title type="html">Practical Programming</title><author><name>James Gould</name><email>contact@tanz.dev</email></author><entry><title type="html">Publishing Jekyll Blog via Azure Devops</title><link href="/posts/scuffed-publish/" rel="alternate" type="text/html" title="Publishing Jekyll Blog via Azure Devops" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>/posts/scuffed-publish</id><content type="html" xml:base="/posts/scuffed-publish/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;When deciding to build a blog there were a few options:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A custom domain name. Medium gets on my nerves and I wouldn’t want to inflict that on somebody else.&lt;/li&gt;
+  &lt;li&gt;Easy mechanism to design and publish posts, markdown being the optimal choice.&lt;/li&gt;
+  &lt;li&gt;A theme that was minimalistic but flexible.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Initially I settled on &lt;a href=&quot;https://hashnode.com/&quot;&gt;Hashnode&lt;/a&gt; which allowed easy setup, 1-click themes and a free custom domain name alias.&lt;/p&gt;
+
+&lt;p&gt;After setting it up it was swiftly apparent how bloated the platform was. I just wanted somewhere to write up interesting topics, not participate in some global developer community where we all pass-the-upvote and #followback.&lt;/p&gt;
+
+&lt;p&gt;With limited knowledge in the space I stumbled across Jekyll, an open source markdown-driven platform which generates static HTML from markdown files with an associated theme. Perfect!&lt;/p&gt;
+
+&lt;p&gt;I got my site set up locally, got the theme installed (took some time) and got the build working so that updates I published would actually generate into the HTML.&lt;/p&gt;
+
+&lt;p&gt;Next step: deployment.&lt;/p&gt;
+
+&lt;p&gt;I’m no guru with CI/CD. I can pick apart pre-assembled YAML files and make them work, or follow a wizard to generate the tasks behind the scenes. If there’s a bug, I bin the lot off and start again. I just needed to find a way to build and publish the site to some web server every time I pushed a new post to the repository the blog sat on. Should be easy enough.&lt;/p&gt;
+
+&lt;h1 id=&quot;pragmatism&quot;&gt;Pragmatism&lt;/h1&gt;
+
+&lt;p&gt;I settled on an Azure Static Web App. It offers a generous free tier with an automatic SSL certificate, free domain mapping and I could easily deploy my static content manually via Kudu. I wanted to automate this step because I’m a lazy bugger, so I gave it a shot.&lt;/p&gt;
+
+&lt;p&gt;Frankly I won’t waste your time at this stage with waffling on about my attempts to get various ruby scripts running, with artifacts being shoved around etc. There are guides out there if you’re interested - I couldn’t make heads nor tails of them.&lt;/p&gt;
+
+&lt;p&gt;Here’s what I knew worked:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Locally the blog compiled and looked fine once running with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jeykll serve&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory compiled fully, taking new additions to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;all_collections/_posts&lt;/code&gt; directory and building them into a HTML file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, cue the super scuffed approach to deploying this blog.&lt;/p&gt;
+
+&lt;h1 id=&quot;rules-are-meant-to-be-completely-deleted-from-the-file&quot;&gt;Rules are meant to be completely deleted from the file&lt;/h1&gt;
+
+&lt;p&gt;For this &lt;em&gt;pragmatic&lt;/em&gt; guide we need to commit our first crime: removed the exclusion of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;. How dreadful!&lt;/p&gt;
+
+&lt;h1 id=&quot;forgive-me-microsoft-for-i-have-sinned&quot;&gt;Forgive me Microsoft for I have sinned.&lt;/h1&gt;
+
+&lt;p&gt;Here’s the dreadful YAML file to use for publishing a single post. It’s not pretty, but it works. All in the name of getting it working without too much glitter:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    submodules: true
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
+      azure_static_web_apps_api_token: $(deployment_token)
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;At the root of your Jeykll blog add a new file called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipeline.yml&lt;/code&gt; and add the above as the contents.&lt;/p&gt;
+
+&lt;p&gt;Don’t worry about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;api_location: 'api'&lt;/code&gt; section - it does nothing and frankly I’m scared to touch it.&lt;/p&gt;
+
+&lt;h1 id=&quot;azure-devops---im-sorry&quot;&gt;Azure Devops - I’m sorry.&lt;/h1&gt;
+
+&lt;p&gt;First, create the Azure Static Web App. Once it’s deployed, you should land on the dashboard for the resource:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/WNGBMuU.png&quot; alt=&quot;Azure Devops - Static Web App With Jekyll&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here you can set up your custom domain if you like - the verification for the TXT DNS addition took 3 (!) days to fully detect in the portal. We’ll skip this step for now.&lt;/p&gt;
+
+&lt;p&gt;Whilst on Overview, find the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Manage Deployment Token&lt;/code&gt; button on the right hand side.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/Mh4F6gs.png&quot; alt=&quot;Azure Devops - Manage Deployment Token&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click the button (of course), copy the token or keep the blade open for the next step.&lt;/p&gt;
+
+&lt;p&gt;Go to your DevOps organisation -&amp;gt; Project containing the blog repository -&amp;gt; Pipelines.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;You won’t have the “Blog” pipeline there, don’t worry!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/K71qLWI.png&quot; alt=&quot;Azure Devops - New Pipeline for Jekyll Blog&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click on new pipeline to begin sinning like me&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/W7X3oux.png&quot; alt=&quot;Azure Devops - New Pipeline&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Azure Repos Git&lt;/code&gt; option, assuming that’s where your blog repository is stored.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/YklnYR7.png&quot; alt=&quot;Azure Devops - VCS select&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Select your repository&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/xYX3uMb.png&quot; alt=&quot;Azure devops - repo select&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that you’ve saved our sinful pipeline &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.yml&lt;/code&gt; file, select &lt;em&gt;Existing Azure Pipelines YAML file&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/RJPnFwo.png&quot; alt=&quot;Azure Devops - Existing YAML file&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipelines.yml&lt;/code&gt; file from the root directory. For whatever reason Jekyll builds a copy to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory, be sure &lt;strong&gt;not&lt;/strong&gt; to use that one. Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Continue&lt;/code&gt; once you’re done.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/YSdGLO2.png&quot; alt=&quot;Azure Devops - YML file select&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Our &lt;del&gt;great&lt;/del&gt; functional pipeline text will load in&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/1GkALI3.png&quot; alt=&quot;Azure Devops - Pipeline Review&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now’s the time to link the pipeline to our new, shiny Azure Static Web App. Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Variables&lt;/code&gt; in the top right&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/7oKsEvr.png&quot; alt=&quot;Azure Devops - Variables&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;New Variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/Ef6tOg9.png&quot; alt=&quot;Azure Devops - New Variable&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you take a look at the bottom of our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipelines&lt;/code&gt; file, we have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$variable&lt;/code&gt; called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deployment_token&lt;/code&gt;. That’s the name of our variable. Make sure to add the token from our Static Web App blade from earlier to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt; field:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/yY9rvt2.png&quot; alt=&quot;Azure Devops - Variable Added&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You can mark it as secret if you like, I haven’t because my partner can’t even find the monitor power button let alone understand Azure Pipelines.&lt;/p&gt;
+
+&lt;p&gt;You should see your new variable appear in the list, click save.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/z448xg4.png&quot; alt=&quot;Azure Devops - Variable saved&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now save your pipeline by using the arrow on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Run&lt;/code&gt; button to show the hidden, very useful option&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/APPyFYX.png&quot; alt=&quot;i cant be bothered anymore&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Awesome, your pipeline is set up. Now every time you push to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master&lt;/code&gt;, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory will deploy to your Azure Static Web App. &lt;a href=&quot;https://www.youtube.com/watch?v=OUXvrWeQU0g&quot;&gt;Please clap&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;building-and-publishing-your-site&quot;&gt;Building and publishing your site&lt;/h1&gt;
+
+&lt;p&gt;Now for the fun, extra scuffed section.&lt;/p&gt;
+
+&lt;p&gt;Every time a new blog post gets added, we need to build the blog. This converts the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.md&lt;/code&gt; files containing our very important ramblings into readable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HTML&lt;/code&gt; files. How exciting!&lt;/p&gt;
+
+&lt;p&gt;Now I’m lazy, if you couldn’t already tell. I can’t be bothered to write nice commits for things people will never see, so I wrote a &lt;del&gt;horrendous&lt;/del&gt; functional script to speed this part up too.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle exec jekyll build | git add . | git commit -m &quot;new post&quot; | git pull | git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Here we’re doing a few bits:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jekyll build&lt;/code&gt; builds the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.md&lt;/code&gt; files into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.html&lt;/code&gt; files for the posts.&lt;/li&gt;
+  &lt;li&gt;Add all the new files to our repoitory.&lt;/li&gt;
+  &lt;li&gt;Commit them with a very descriptive commit message.&lt;/li&gt;
+  &lt;li&gt;Pull the latest changes in case we did a drunk ramble directly into DevOps (don’t judge me)&lt;/li&gt;
+  &lt;li&gt;Push the changes locally.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I threw that crap into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ps1&lt;/code&gt; PowerShell script and added it to the root of my blog.&lt;/p&gt;
+
+&lt;p&gt;Now, with the combined strength of our scuffed pipeline and horrendous git practices that my professors are definitely weeping at, we can write a new blog post and publish it with just a script. How far technology has come.&lt;/p&gt;
+
+&lt;h1 id=&quot;after-thoughts&quot;&gt;After thoughts&lt;/h1&gt;
+
+&lt;p&gt;I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>contact@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry><entry><title type="html">Jekyll Markdown</title><link href="/posts/jekyll-markdown/" rel="alternate" type="text/html" title="Jekyll Markdown" /><published>2021-11-04T00:00:00+00:00</published><updated>2021-11-04T00:00:00+00:00</updated><id>/posts/jekyll-markdown</id><content type="html" xml:base="/posts/jekyll-markdown/">&lt;p&gt;Text can be &lt;strong&gt;bold&lt;/strong&gt;, &lt;em&gt;italic&lt;/em&gt;, &lt;del&gt;strikethrough&lt;/del&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keyword&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;./another-page.html&quot;&gt;Link to another page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There should be whitespace between paragraphs.&lt;/p&gt;
+
+&lt;p&gt;There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.&lt;/p&gt;
+
+&lt;h4 id=&quot;image&quot;&gt;Image&lt;/h4&gt;
+
+&lt;p&gt;Images can be clicked to enlarge :) .&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://picsum.photos/800/300&quot; alt=&quot;Dummy Image&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;header-1&quot;&gt;Header 1&lt;/h1&gt;
+
+&lt;p&gt;This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.&lt;/p&gt;
+
+&lt;h2 id=&quot;header-2&quot;&gt;Header 2&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This is a blockquote following a header.&lt;/p&gt;
+
+  &lt;p&gt;When something is important enough, you do it even if the odds are not in your favor.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;header-3&quot;&gt;Header 3&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This is another blockquote following header 3&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Javascript code with syntax highlighting.&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dateformat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i18n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;./lang/&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Ruby code with syntax highlighting&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;GitHubPages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Dependencies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gems&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add_dependency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;= &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;header-4&quot;&gt;Header 4&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;This is an unordered list following a header.&lt;/li&gt;
+  &lt;li&gt;This is an unordered list following a header.&lt;/li&gt;
+  &lt;li&gt;This is an unordered list following a header.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;header-5&quot;&gt;Header 5&lt;/h5&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;This is an ordered list following a header.&lt;/li&gt;
+  &lt;li&gt;This is an ordered list following a header.&lt;/li&gt;
+  &lt;li&gt;This is an ordered list following a header.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h6 id=&quot;header-6&quot;&gt;Header 6&lt;/h6&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;head1&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;head two&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;three&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ok&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;good swedish fish&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;nice&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;out of stock&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;good and plenty&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;nice&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ok&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;good &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;oreos&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;hmm&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ok&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;good &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zoute&lt;/code&gt; drop&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;yumm&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;theres-a-horizontal-rule-below-this&quot;&gt;There’s a horizontal rule below this.&lt;/h3&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;here-is-an-unordered-list&quot;&gt;Here is an unordered list:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Item foo&lt;/li&gt;
+  &lt;li&gt;Item bar&lt;/li&gt;
+  &lt;li&gt;Item baz&lt;/li&gt;
+  &lt;li&gt;Item zip&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;and-an-ordered-list&quot;&gt;And an ordered list:&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Item one
+    &lt;ol&gt;
+      &lt;li&gt;Item one&lt;/li&gt;
+      &lt;li&gt;Item two
+        &lt;ol&gt;
+          &lt;li&gt;Item one&lt;/li&gt;
+          &lt;li&gt;Item two&lt;/li&gt;
+          &lt;li&gt;Item three&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Item three&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Item four&lt;/li&gt;
+  &lt;li&gt;Item two&lt;/li&gt;
+  &lt;li&gt;Item three&lt;/li&gt;
+  &lt;li&gt;Item four&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;and-a-nested-list&quot;&gt;And a nested list:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;level 1 item
+    &lt;ul&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+      &lt;li&gt;level 2 item
+        &lt;ul&gt;
+          &lt;li&gt;level 3 item&lt;/li&gt;
+          &lt;li&gt;level 3 item&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;level 1 item
+    &lt;ul&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;level 1 item
+    &lt;ul&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+      &lt;li&gt;level 2 item&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;level 1 item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;The final element.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>James Gould</name><email>contact@tanz.dev</email></author><category term="jekyll" /><summary type="html">Text can be bold, italic, strikethrough or keyword</summary></entry></feed>
