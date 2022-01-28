@@ -1,4 +1,4 @@
-const categories = { jekyll: [{ url: `/posts/jekyll-markdown/`, date: `04 Nov 2021`, title: `Jekyll Markdown`},], }
+const categories = {  }
 
 window.onload = function () {
   document.querySelectorAll(".category").forEach((category) => {

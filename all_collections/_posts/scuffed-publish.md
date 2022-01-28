@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Publishing Jekyll Blog via Azure Devops
-date: 2021-11-04
+date: 2022-01-28
 categories: ["jekyll", "azure devops"]
 ---
 
