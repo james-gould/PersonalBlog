@@ -40,7 +40,7 @@ Now, cue the super scuffed approach to deploying this blog.
 
 # Rules are meant to be completely deleted from the file
 
-For this *pragmatic* guide we need to commit our first crime: removed the exclusion of `_site` from the `.gitignore`. How dreadful!
+For this *pragmatic* guide we need to commit our first crime: remove the exclusion of `_site` from the `.gitignore`. How dreadful!
 
 # Forgive me Microsoft for I have sinned.
 
