@@ -1,14 +1,26 @@
 trigger:
-  - master
+- master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-  - checkout: self
-    submodules: true
-  - task: AzureStaticWebApp@0
-    inputs:
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.5'
+
+- script: |
+    gem install jekyll bundler
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
+ 
+- script: |
+    bundle install
+    jekyll build
+  displayName: 'jekyll'
+
+- task: AzureStaticWebApp@0
+  inputs:
       app_location: '/_site'
       api_location: 'api'
       output_location: '/_site'
