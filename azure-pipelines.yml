@@ -4,6 +4,14 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+schedules:
+- cron: "5 0 * * *"
+  displayName: Daily release for scheduled posts
+  branches:
+    include: 
+     - master
+  always: true 
+
 steps:
 - task: UseRubyVersion@0
   inputs:
@@ -25,3 +33,4 @@ steps:
       api_location: 'api'
       output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
+
