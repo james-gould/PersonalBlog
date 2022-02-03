@@ -30,7 +30,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '/'
+    SourceFolder: '$(Build.SourcesDirectory)'
     Contents: 'posts.html'
     TargetFolder: '/_site'
     
