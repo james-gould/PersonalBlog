@@ -1,4 +1,5 @@
 trigger:
+
 - master
 
 pool:
@@ -27,6 +28,12 @@ steps:
     bundle exec jekyll build
   displayName: 'jekyll'
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/'
+    Contents: 'posts.html'
+    TargetFolder: '/_site'
+    
 - task: AzureStaticWebApp@0
   inputs:
       app_location: '/_site'
