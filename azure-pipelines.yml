@@ -24,15 +24,15 @@ steps:
   displayName: 'bundle install'
  
 - script: |
-    bundle install
     bundle exec jekyll build
-  displayName: 'jekyll'
+  displayName: 'jekyll build'
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '/'
+    SourceFolder: '$(Build.SourcesDirectory)'
     Contents: 'posts.html'
-    TargetFolder: '/_site'
+    TargetFolder: '$(Build.SourcesDirectory)/_site'
+    displayName: 'Copy posts.html'
     
 - task: AzureStaticWebApp@0
   inputs:
