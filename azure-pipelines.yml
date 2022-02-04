@@ -28,9 +28,13 @@ steps:
 #     bundle exec jekyll build
 #   displayName: 'jekyll'
 
-  - script:
-    bundle exec jekyll build
-  displayName: 'jekyll'
+- task: CmdLine@2
+  inputs:
+    script: bundle exec jekyll build
+    displayName: 'Jekyll Build'
+
+  # - script: bundle exec jekyll build
+  # displayName: 'jekyll'
 
 - task: CopyFiles@2
   inputs:
