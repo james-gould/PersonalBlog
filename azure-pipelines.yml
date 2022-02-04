@@ -28,7 +28,7 @@ steps:
 #     bundle exec jekyll build
 #   displayName: 'jekyll'
 
-  - script: |
+  - script:
     bundle exec jekyll build
   displayName: 'jekyll'
 
