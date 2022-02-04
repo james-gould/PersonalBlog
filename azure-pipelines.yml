@@ -18,10 +18,10 @@ steps:
   inputs:
     versionSpec: '>= 2.5'
 
-# - script: |
-#     gem install jekyll bundler
-#     bundle install --retry=3 --jobs=4
-#   displayName: 'bundle install'
+- script: |
+    gem install jekyll bundler
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
  
 # - script: |
 #     bundle install
