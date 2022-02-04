@@ -6,7 +6,7 @@ baseurl: ""
 # for atom feed
 author:
   name: James Gould
-  email: contact@tanz.dev
+  email: james@tanz.dev
 
 plugins:
   - jemoji

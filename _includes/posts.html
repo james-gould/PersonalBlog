@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <main>
+        {% for post in site.posts %}
+
+            {{post.title}};{{post.date}},
+        
+        {%endfor%}
+    </main>
+  </body>
+</html>

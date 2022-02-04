@@ -18,21 +18,25 @@ steps:
   inputs:
     versionSpec: '>= 2.5'
 
-- script: |
-    gem install jekyll bundler
-    bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
+# - script: |
+#     gem install jekyll bundler
+#     bundle install --retry=3 --jobs=4
+#   displayName: 'bundle install'
  
-- script: |
+# - script: |
+#     bundle install
+#     bundle exec jekyll build
+#   displayName: 'jekyll'
+
+  - script: |
     bundle exec jekyll build
-  displayName: 'jekyll build'
+  displayName: 'jekyll'
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
+    SourceFolder: '$(Build.SourcesDirectory)/_includes'
     Contents: 'posts.html'
     TargetFolder: '$(Build.SourcesDirectory)/_site'
-    displayName: 'Copy posts.html'
     
 - task: AzureStaticWebApp@0
   inputs:
@@ -40,4 +44,3 @@ steps:
       api_location: 'api'
       output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
-
