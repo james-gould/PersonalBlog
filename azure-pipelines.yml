@@ -30,6 +30,11 @@ steps:
 
 - task: CmdLine@2
   inputs:
+    script: gem install jekyll bundler
+    displayName: 'Install bundler'
+
+- task: CmdLine@2
+  inputs:
     script: bundle exec jekyll build
     displayName: 'Jekyll Build'
 
