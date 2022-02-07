@@ -19,7 +19,7 @@ steps:
     versionSpec: '>= 2.5'
 
 - script: |
-    gem install jekyll bundler --no-rdoc
+    gem install jekyll bundler --no-ri --no-rdoc
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
@@ -28,11 +28,12 @@ steps:
     script: bundle exec jekyll build
     displayName: 'Jekyll Build'
 
-- task: AzureFileCopy@4
+- task: CopyFiles@2
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: 'posts.json'
     targetFolder: '$(Build.SourcesDirectory)/_site'
+    OverWrite: true
 
     
 - task: AzureStaticWebApp@0
