@@ -27,6 +27,13 @@ steps:
   inputs:
     script: bundle exec jekyll build
     displayName: 'Jekyll Build'
+
+- task: AzureFileCopy@4
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'posts.json'
+    targetFolder: '$(Build.SourcesDirectory)/_site'
+
     
 - task: AzureStaticWebApp@0
   inputs:
