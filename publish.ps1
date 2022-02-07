@@ -1,1 +1,1 @@
-git add . | git commit -m "new post" | git pull | git push
+.\PostGen.exe | git add . | git commit -m "new post" | git pull | git push

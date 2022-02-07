@@ -1,4 +1,133 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-02-03T23:07:58+00:00</updated><id>/feed.xml</id><title type="html">Practical Programming</title><author><name>James Gould</name><email>contact@tanz.dev</email></author><entry><title type="html">Publishing Jekyll Blog via Azure Devops</title><link href="/posts/scuffed-publish/" rel="alternate" type="text/html" title="Publishing Jekyll Blog via Azure Devops" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>/posts/scuffed-publish</id><content type="html" xml:base="/posts/scuffed-publish/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-02-06T10:05:12+00:00</updated><id>/feed.xml</id><title type="html">Practical Programming</title><author><name>James Gould</name><email>james@tanz.dev</email></author><entry><title type="html">Fast Jekyll Blog Deployment with Azure CI/CD</title><link href="/posts/fast-deployment/" rel="alternate" type="text/html" title="Fast Jekyll Blog Deployment with Azure CI/CD" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>/posts/fast-deployment</id><content type="html" xml:base="/posts/fast-deployment/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.&lt;/p&gt;
+
+&lt;p&gt;If you’re a fan of horror stories feel free to read my &lt;a href=&quot;https://tanz.dev/posts/scuffed-publish-Copy/&quot;&gt;initial attempt here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Some future requirements have come up which meant that I not only needed a proper &lt;em&gt;build&lt;/em&gt; pipeline, but also a fast one.&lt;/p&gt;
+
+&lt;p&gt;For those unaware, Azure Devops has a free tier which includes 1800 minutes of build time per month, refreshing on the 1st of the month.&lt;/p&gt;
+
+&lt;p&gt;I’ve now built a true, fairly fast CI/CD pipeline to build and release this blog out and I’d like to share my findings with you, dear reader.&lt;/p&gt;
+
+&lt;p&gt;In case you just want the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YAML&lt;/code&gt; and nothing else, here it is:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+schedules:
+- cron: &quot;5 0 * * *&quot;
+  displayName: Daily release for scheduled posts
+  branches:
+    include: 
+     - master
+  always: true 
+
+steps:
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '&amp;gt;= 2.5'
+
+- script: |
+    gem install jekyll bundler --no-rdoc
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
+
+- task: CmdLine@2
+  inputs:
+    script: bundle exec jekyll build
+    displayName: 'Jekyll Build'
+    
+- task: AzureStaticWebApp@0
+  inputs:
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
+      azure_static_web_apps_api_token: $(deployment_token)
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;lets-break-it-down&quot;&gt;Let’s break it down&lt;/h1&gt;
+
+&lt;p&gt;Let’s jump into the nitty-gritty of what this build config is doing, and why.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;schedules:
+- cron: &quot;5 0 * * *&quot;
+  displayName: Daily release for scheduled posts
+  branches:
+    include: 
+     - master
+  always: true 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is an optional include that will build the blog on a schedule, with the cron being every day at 00:05am. This is so I can schedule posts into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;all_collections/_posts&lt;/code&gt; directory and have them release on the date of the post.&lt;/p&gt;
+
+&lt;p&gt;If you don’t want to schedule a build and simply want to trigger the release when you publish a new post, delete this section.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;steps:
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '&amp;gt;= 2.5'
+
+- script: |
+    gem install jekyll bundler --no-rdoc
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is a 2 step part which has been the majority of the time sink I’ve experienced.&lt;/p&gt;
+
+&lt;p&gt;First we’re specifying which version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ruby&lt;/code&gt; to use, as &lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll advises against using spec 3.0 or higher in their quickstart guide.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Next we’re pipelining two scripts to set the stage for our blog:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler --no-rdoc&lt;/code&gt; which will allow the actual build script used by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Jekyll&lt;/code&gt; to run correctly.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install --retry=3 --jobs=4&lt;/code&gt; which will then install our dependencies etc, ready for compiling the blog markdown into HTML.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s take a deeper look into each.&lt;/p&gt;
+
+&lt;h1 id=&quot;lightening-fast&quot;&gt;Lightening fast?&lt;/h1&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler --no-rdoc&lt;/code&gt; comprises of two parts, the command to run and the parameters.&lt;/p&gt;
+
+&lt;p&gt;The initital command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler&lt;/code&gt; typically takes around 2m30s to run on the Azure Free tier. Part of this, for whatever reason, is building documentation for the script which we, as “set-and-forget” pipeline runners, don’t care about. That’s where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-rdoc&lt;/code&gt; comes in.&lt;/p&gt;
+
+&lt;p&gt;With this addition we skip the step where the documentation is created. This shaved around 30s off the total build time, saving our precious free minutes!&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install --retry=3 --jobs=4&lt;/code&gt; is an important part of the process as building the Jekyll site requires the bundle to be installed. Some caching can be done here to mitigate further time, but I haven’t gotten to that yet.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--job=4&lt;/code&gt; is the key part here. Without it, we run the process on a single core. By specifying &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4&lt;/code&gt; we’re able to run our command on 4 cores, shaving off a bunch of time. I didn’t really notice this before, but I took it out for a trial run and it added an extra couple of minutes to the build time.&lt;/p&gt;
+
+&lt;h1 id=&quot;the-boring-stuff&quot;&gt;The boring stuff&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: CmdLine@2
+  inputs:
+    script: bundle exec jekyll build
+    displayName: 'Jekyll Build'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we’ve gotten our ducks firmly in a row it’s time to build out &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xxx.md&lt;/code&gt; files into actual HTML. This is a simple command-line script which runs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jekyll build&lt;/code&gt;. Only takes about 1s, no point trying to optimise it.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: AzureStaticWebApp@0
+  inputs:
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
+      azure_static_web_apps_api_token: $(deployment_token)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;At this point we’ve done all the required steps and we’re ready to publish out to our Azure Static Web App. We have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline variable&lt;/code&gt; set called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deployment_token&lt;/code&gt; which you can grab from the configuration blade of your Static Web App (detailed explanation on the previous post linked above).&lt;/p&gt;
+
+&lt;p&gt;This step takes the ready &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory and publishes it out.&lt;/p&gt;
+
+&lt;h2 id=&quot;aaaaand-breathe&quot;&gt;Aaaaand breathe.&lt;/h2&gt;
+
+&lt;p&gt;Cool, we’re all set. It’s running, total time is typically just over 3 minutes which means we can run a whole bunch of these each day at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00:05&lt;/code&gt; without stressing.&lt;/p&gt;</content><author><name>James Gould</name><email>james@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry><entry><title type="html">Publishing Jekyll Blog via Azure Devops</title><link href="/posts/scuffed-publish/" rel="alternate" type="text/html" title="Publishing Jekyll Blog via Azure Devops" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>/posts/scuffed-publish</id><content type="html" xml:base="/posts/scuffed-publish/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;When deciding to build a blog there were a few options:&lt;/p&gt;
 
@@ -162,4 +291,4 @@ steps:
 
 &lt;p&gt;I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.&lt;/p&gt;
 
-&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>contact@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry></feed>
+&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>james@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry></feed>

@@ -60,7 +60,7 @@ steps:
 
 # Let's break it down
 
-Let's just into the nitty-gritty of what this build config is doing, and why.
+Let's jump into the nitty-gritty of what this build config is doing, and why.
 
 ```
 schedules:
