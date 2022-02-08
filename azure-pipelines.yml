@@ -23,6 +23,11 @@ steps:
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
+  - task: CmdLine@2
+  inputs:
+    script: ./PostGen.exe
+    displayName: 'Generate posts.json'
+
 - task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
