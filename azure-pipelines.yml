@@ -25,6 +25,15 @@ steps:
 
 - task: CmdLine@2
   inputs:
+<<<<<<< HEAD
+=======
+    script: './PostGen.exe'
+    workingDirectory: '$(Build.SourcesDirectory)'
+  displayName: 'Generate posts.json'
+
+- task: CmdLine@2
+  inputs:
+>>>>>>> abdee8c2996810b704eabe6bbcc3de56d2e32941
     script: bundle exec jekyll build
   displayName: 'Jekyll Build'
 
@@ -34,7 +43,11 @@ steps:
     contents: 'posts.json'
     targetFolder: '$(Build.SourcesDirectory)/_site'
     OverWrite: true
+<<<<<<< HEAD
   displayName: 'Copy post.json to site root'
+=======
+  displayName: 'Copy posts.json'
+>>>>>>> abdee8c2996810b704eabe6bbcc3de56d2e32941
 
 - task: AzureStaticWebApp@0
   inputs:
