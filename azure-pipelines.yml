@@ -24,9 +24,9 @@ steps:
   displayName: 'bundle install'
 
   - task: CmdLine@2
-  inputs:
-    script: ./PostGen.exe
-    displayName: 'Generate posts.json'
+    inputs:
+      script: ./PostGen.exe
+      displayName: 'Generate posts.json'
 
 - task: CmdLine@2
   inputs:
