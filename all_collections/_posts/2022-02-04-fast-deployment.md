@@ -9,7 +9,7 @@ categories: ["jekyll", "azure devops"]
 
 A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.
 
-If you're a fan of horror stories feel free to read my [initial attempt here](https://tanz.dev/posts/scuffed-publish-Copy/).
+If you're a fan of horror stories feel free to read my [initial attempt here](https://tanz.dev/posts/scuffed-publish/).
 
 Some future requirements have come up which meant that I not only needed a proper *build* pipeline, but also a fast one.
 
