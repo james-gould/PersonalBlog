@@ -18,7 +18,7 @@
   color: #ffffff;
 } /* Generic */
 .highlight .k {
-  color: #D8A0DF;
+  color: #569CD6;
   font-weight: bold;
 } /* Keyword */
 .highlight .l {
@@ -110,7 +110,7 @@
   font-weight: bold;
 } /* Keyword.Reserved */
 .highlight .kt {
-  color: #9CDCFE;
+  color: #569CD6;
   font-weight: bold;
 } /* Keyword.Type */
 .highlight .ld {
@@ -121,7 +121,7 @@
   font-weight: bold;
 } /* Literal.Number */
 .highlight .s {
-  color: #0086d2;
+  color: #D69D85;
 } /* Literal.String */
 .highlight .na {
   color: #ff0086;
