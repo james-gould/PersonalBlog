@@ -1,6 +1,6 @@
 ---
 layout: post
-title: .NET Aspire Integration Testing Quick Start (and Troubleshooting) 
+title: .NET Aspire Integration Testing Quick Start
 date: 2025-03-16
 categories: [".NET 8", ".NET Aspire", "integration testing", "C#"]
 ---
@@ -29,7 +29,7 @@ We'll be creating a new `.NET Aspire XUnit Project` from Visual Studio:
 
 Once you've got the naming done correctly and project settings configured from the wizard, the following item is *missing* from the template that causes it to entirely break:
 
-```csharp
+```
 <!-- Include in your top level <PropertyGroup> -->
 <PreserveCompilationContext>true</PreserveCompilationContext>
 ```
@@ -54,7 +54,7 @@ Annoying, but not a hill worth dying on. I migrated the models out of the `API` 
 
 The really key part here is the `IsAspireProjectResource="false"` which allows you to reference items from within that project like you would a normal project reference:
 
-```csharp
+```cs
 namespace AzureKeyVaultEmulator.Shared.Constants
 {
     public class AspireConstants

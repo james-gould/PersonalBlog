@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Fast Static Jekyll Blog Deployment with Azure CI/C
+title: Fast Static Jekyll Blog Deployment with Azure CI/CD
 date: 2022-02-04
 categories: ["jekyll", "azure devops"]
 ---

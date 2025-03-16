@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Publishing Static Web App Blog via Azure Devops (I'm Sinning)
+title: Publishing Static Web App Blog via Azure Devops
 date: 2022-01-28
 categories: ["jekyll", "azure devops"]
 ---
