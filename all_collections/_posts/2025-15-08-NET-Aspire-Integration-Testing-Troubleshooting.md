@@ -29,7 +29,7 @@ We'll be creating a new `.NET Aspire XUnit Project` from Visual Studio:
 
 Once you've got the naming done correctly and project settings configured from the wizard, the following item is *missing* from the template that causes it to entirely break:
 
-```
+```csharp
 <!-- Include in your top level <PropertyGroup> -->
 <PreserveCompilationContext>true</PreserveCompilationContext>
 ```
@@ -48,7 +48,7 @@ Once of the nuances of `.NET Aspire` is any projects referenced as classed as `e
 
 Annoying, but not a hill worth dying on. I migrated the models out of the `API` project and into a `Shared` project, and referenced it as such:
 
-```
+```csharp
 <ProjectReference Include="..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj" IsAspireProjectResource="false"/>
 ```
 
