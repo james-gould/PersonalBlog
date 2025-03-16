@@ -5,13 +5,6 @@ description: "
     Practical development guides, written for the average developer.
   </p>
 "
-email: contact@tanz.dev
 contact:
   - title: linkedin
     url: https://www.linkedin.com/in/james-gould-283323198/
-  # - title: twitter
-  #   url: https://twitter.com/sharadcodes
-  # - title: dev
-  #   url: https://dev.to/sharadcodes
-  - title: email
-    url: mailto:contact@tanz.dev

@@ -1,4 +1,4 @@
 ---
-title: Tanz Dev
+title: James Gould
 layout: blog
 ---

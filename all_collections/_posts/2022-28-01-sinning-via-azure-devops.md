@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Publishing Jekyll Blog via Azure Devops
+title: Publishing Static Web App Blog via Azure Devops (I'm Sinning)
 date: 2022-01-28
 categories: ["jekyll", "azure devops"]
 ---
@@ -70,6 +70,8 @@ At the root of your Jeykll blog add a new file called `azure-pipeline.yml` and a
 Don't worry about the `api_location: 'api'` section - it does nothing and frankly I'm scared to touch it.
 
 # Azure Devops - I'm sorry.
+
+**As a heads up I had this blog under an old alias and let the domain expire (like a fool). I've migrated it to this domain, so the names look a little off!**
 
 First, create the Azure Static Web App. Once it's deployed, you should land on the dashboard for the resource:
 

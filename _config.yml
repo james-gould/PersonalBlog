@@ -1,12 +1,12 @@
-title: Practical Programming
+title: James Gould Writes Code
 markdown: kramdown
-url: "https://tanz.dev"
+url: "https://jamesgould.dev"
 baseurl: ""
 
 # for atom feed
 author:
   name: James Gould
-  email: james@tanz.dev
+  email: contact@jamesgould.dev
 
 plugins:
   - jemoji
