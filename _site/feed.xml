@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-02-06T10:05:12+00:00</updated><id>/feed.xml</id><title type="html">Practical Programming</title><author><name>James Gould</name><email>james@tanz.dev</email></author><entry><title type="html">Fast Jekyll Blog Deployment with Azure CI/CD</title><link href="/posts/fast-deployment/" rel="alternate" type="text/html" title="Fast Jekyll Blog Deployment with Azure CI/CD" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>/posts/fast-deployment</id><content type="html" xml:base="/posts/fast-deployment/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://jamesgould.dev/feed.xml" rel="self" type="application/atom+xml" /><link href="https://jamesgould.dev/" rel="alternate" type="text/html" /><updated>2025-03-16T12:14:01+00:00</updated><id>https://jamesgould.dev/feed.xml</id><title type="html">James Gould Writes Code</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">Fast Static Jekyll Blog Deployment with Azure CI/C</title><link href="https://jamesgould.dev/posts/easy-azure-static-webapp-blog/" rel="alternate" type="text/html" title="Fast Static Jekyll Blog Deployment with Azure CI/C" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>https://jamesgould.dev/posts/easy-azure-static-webapp-blog</id><content type="html" xml:base="https://jamesgould.dev/posts/easy-azure-static-webapp-blog/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.&lt;/p&gt;
 
-&lt;p&gt;If you’re a fan of horror stories feel free to read my &lt;a href=&quot;https://tanz.dev/posts/scuffed-publish-Copy/&quot;&gt;initial attempt here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you’re a fan of horror stories feel free to read my &lt;a href=&quot;https://jamesgould.dev/posts/scuffed-publish/&quot;&gt;initial attempt here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Some future requirements have come up which meant that I not only needed a proper &lt;em&gt;build&lt;/em&gt; pipeline, but also a fast one.&lt;/p&gt;
 
@@ -16,7 +16,7 @@
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: &apos;ubuntu-latest&apos;
 
 schedules:
 - cron: &quot;5 0 * * *&quot;
@@ -29,23 +29,23 @@ schedules:
 steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: '&amp;gt;= 2.5'
+    versionSpec: &apos;&amp;gt;= 2.5&apos;
 
 - script: |
     gem install jekyll bundler --no-rdoc
     bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
+  displayName: &apos;bundle install&apos;
 
 - task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
-    displayName: 'Jekyll Build'
+    displayName: &apos;Jekyll Build&apos;
     
 - task: AzureStaticWebApp@0
   inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
+      app_location: &apos;/_site&apos;
+      api_location: &apos;api&apos;
+      output_location: &apos;/_site&apos;
       azure_static_web_apps_api_token: $(deployment_token)
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -70,12 +70,12 @@ steps:
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: '&amp;gt;= 2.5'
+    versionSpec: &apos;&amp;gt;= 2.5&apos;
 
 - script: |
     gem install jekyll bundler --no-rdoc
     bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
+  displayName: &apos;bundle install&apos;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;This is a 2 step part which has been the majority of the time sink I’ve experienced.&lt;/p&gt;
@@ -108,16 +108,16 @@ steps:
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
-    displayName: 'Jekyll Build'
+    displayName: &apos;Jekyll Build&apos;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now that we’ve gotten our ducks firmly in a row it’s time to build out &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xxx.md&lt;/code&gt; files into actual HTML. This is a simple command-line script which runs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jekyll build&lt;/code&gt;. Only takes about 1s, no point trying to optimise it.&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: AzureStaticWebApp@0
   inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
+      app_location: &apos;/_site&apos;
+      api_location: &apos;api&apos;
+      output_location: &apos;/_site&apos;
       azure_static_web_apps_api_token: $(deployment_token)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -127,7 +127,7 @@ steps:
 
 &lt;h2 id=&quot;aaaaand-breathe&quot;&gt;Aaaaand breathe.&lt;/h2&gt;
 
-&lt;p&gt;Cool, we’re all set. It’s running, total time is typically just over 3 minutes which means we can run a whole bunch of these each day at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00:05&lt;/code&gt; without stressing.&lt;/p&gt;</content><author><name>James Gould</name><email>james@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry><entry><title type="html">Publishing Jekyll Blog via Azure Devops</title><link href="/posts/scuffed-publish/" rel="alternate" type="text/html" title="Publishing Jekyll Blog via Azure Devops" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>/posts/scuffed-publish</id><content type="html" xml:base="/posts/scuffed-publish/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Cool, we’re all set. It’s running, total time is typically just over 3 minutes which means we can run a whole bunch of these each day at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00:05&lt;/code&gt; without stressing.&lt;/p&gt;</content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry><entry><title type="html">Publishing Static Web App Blog via Azure Devops (I’m Sinning)</title><link href="https://jamesgould.dev/posts/sinning-via-azure-devops/" rel="alternate" type="text/html" title="Publishing Static Web App Blog via Azure Devops (I’m Sinning)" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>https://jamesgould.dev/posts/sinning-via-azure-devops</id><content type="html" xml:base="https://jamesgould.dev/posts/sinning-via-azure-devops/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;When deciding to build a blog there were a few options:&lt;/p&gt;
 
@@ -183,18 +183,20 @@ steps:
     submodules: true
   - task: AzureStaticWebApp@0
     inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
+      app_location: &apos;/_site&apos;
+      api_location: &apos;api&apos;
+      output_location: &apos;/_site&apos;
       azure_static_web_apps_api_token: $(deployment_token)
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;At the root of your Jeykll blog add a new file called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipeline.yml&lt;/code&gt; and add the above as the contents.&lt;/p&gt;
 
-&lt;p&gt;Don’t worry about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;api_location: 'api'&lt;/code&gt; section - it does nothing and frankly I’m scared to touch it.&lt;/p&gt;
+&lt;p&gt;Don’t worry about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;api_location: &apos;api&apos;&lt;/code&gt; section - it does nothing and frankly I’m scared to touch it.&lt;/p&gt;
 
 &lt;h1 id=&quot;azure-devops---im-sorry&quot;&gt;Azure Devops - I’m sorry.&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;As a heads up I had this blog under an old alias and let the domain expire (like a fool). I’ve migrated it to this domain, so the names look a little off!&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;First, create the Azure Static Web App. Once it’s deployed, you should land on the dashboard for the resource:&lt;/p&gt;
 
@@ -291,4 +293,4 @@ steps:
 
 &lt;p&gt;I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.&lt;/p&gt;
 
-&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>james@tanz.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry></feed>
+&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry></feed>

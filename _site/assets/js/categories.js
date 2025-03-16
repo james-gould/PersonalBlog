@@ -1,4 +1,4 @@
-const categories = { jekyll: [{ url: `/posts/fast-deployment/`, date: `04 Feb 2022`, title: `Fast Jekyll Blog Deployment with Azure CI/CD`},{ url: `/posts/scuffed-publish/`, date: `28 Jan 2022`, title: `Publishing Jekyll Blog via Azure Devops`},],azure devops: [{ url: `/posts/fast-deployment/`, date: `04 Feb 2022`, title: `Fast Jekyll Blog Deployment with Azure CI/CD`},{ url: `/posts/scuffed-publish/`, date: `28 Jan 2022`, title: `Publishing Jekyll Blog via Azure Devops`},], }
+const categories = { jekyll: [{ url: `/posts/easy-azure-static-webapp-blog/`, date: `04 Feb 2022`, title: `Fast Static Jekyll Blog Deployment with Azure CI/C`},{ url: `/posts/sinning-via-azure-devops/`, date: `28 Jan 2022`, title: `Publishing Static Web App Blog via Azure Devops (I'm Sinning)`},],azure devops: [{ url: `/posts/easy-azure-static-webapp-blog/`, date: `04 Feb 2022`, title: `Fast Static Jekyll Blog Deployment with Azure CI/C`},{ url: `/posts/sinning-via-azure-devops/`, date: `28 Jan 2022`, title: `Publishing Static Web App Blog via Azure Devops (I'm Sinning)`},], }
 
 window.onload = function () {
   document.querySelectorAll(".category").forEach((category) => {

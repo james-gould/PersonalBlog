@@ -16,21 +16,30 @@ schedules:
 steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: '>= 2.5'
+    versionSpec: '>= 2.7'
 
 - script: |
-    gem install jekyll bundler --no-rdoc
+    gem install jekyll bundler --no-ri --no-rdoc
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
 - task: CmdLine@2
   inputs:
-    script: bundle exec jekyll build
-    displayName: 'Jekyll Build'
-    
+    script: bundle exec jekyll build --trace
+  displayName: 'Jekyll Build'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'posts.json'
+    targetFolder: '$(Build.SourcesDirectory)/_site'
+    OverWrite: true
+  displayName: 'Copy post.json to site root'
+
 - task: AzureStaticWebApp@0
   inputs:
       app_location: '/_site'
       api_location: 'api'
       output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
+  displayName: 'Deploy to WebApp'
