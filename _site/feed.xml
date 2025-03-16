@@ -1,277 +1,293 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://jamesgould.dev/feed.xml" rel="self" type="application/atom+xml" /><link href="https://jamesgould.dev/" rel="alternate" type="text/html" /><updated>2025-03-16T15:54:09+00:00</updated><id>https://jamesgould.dev/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start (and Troubleshooting)</title><link href="https://jamesgould.dev/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start (and Troubleshooting)" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>https://jamesgould.dev/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="https://jamesgould.dev/posts/NET-Aspire-Integration-Testing-Troubleshooting/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-16T18:39:33+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
-&lt;p&gt;One of my main gripes with Microsoft is their documentation. If you’re starting something from scratch you’ll naturally Google around for it, find the docs and the example code looks super simple; then you get into the nitty gritty and suddenly you’re riding solo.&lt;/p&gt;
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.Shared.Constants</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">AspireConstants</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">EmulatorServiceName</span> <span class="p">=</span> <span class="s">"keyVaultEmulatorApi"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-&lt;p&gt;I’ve decided to fork the &lt;a href=&quot;https://github.com/james-gould/azure-keyvault-emulator&quot;&gt;Azure KeyVault Emulator&lt;/a&gt;, which has been archived as of October 2024, because the functionality is really quite desirable. Aspire has allowed us to create local cloud environments at dev-time without needing to actually host or deploy resources, nor configure RBAC access (shudders). Key Vault is one of those services that &lt;em&gt;doesn’t&lt;/em&gt; have support in Aspire (yet?) and you need to have a real instance of it hosted on Azure. With the emulator, and my future development/extensions, this won’t be required.&lt;/p&gt;
+<span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.IntegrationTests.SetupHelper</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ExampleReference</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">referencedString</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
 
-&lt;p&gt;I wanted to create integration tests for the API to ensure it met the acceptance criteria for public consumption - naturally I googled “.NET Aspire Integration Testing” and &lt;a href=&quot;https://learn.microsoft.com/en-us/dotnet/aspire/testing/write-your-first-test?pivots=xunit&quot;&gt;this was the first link I saw&lt;/a&gt;, from Microsoft themselves!&lt;/p&gt;
+<p>One of my main gripes with Microsoft is their documentation. If you’re starting something from scratch you’ll naturally Google around for it, find the docs and the example code looks super simple; then you get into the nitty gritty and suddenly you’re riding solo.</p>
 
-&lt;p&gt;I use XUnit for all my testing purposes (mainly from habit) and .NET Aspire has a handy XUnit template you can just create a project from and now you have integration testing support!&lt;/p&gt;
+<p>I’ve decided to fork the <a href="https://github.com/james-gould/azure-keyvault-emulator">Azure KeyVault Emulator</a>, which has been archived as of October 2024, because the functionality is really quite desirable. Aspire has allowed us to create local cloud environments at dev-time without needing to actually host or deploy resources, nor configure RBAC access (shudders). Key Vault is one of those services that <em>doesn’t</em> have support in Aspire (yet?) and you need to have a real instance of it hosted on Azure. With the emulator, and my future development/extensions, this won’t be required.</p>
 
-&lt;p&gt;Right? No. Why else would I be writing this?&lt;/p&gt;
+<p>I wanted to create integration tests for the API to ensure it met the acceptance criteria for public consumption - naturally I googled “.NET Aspire Integration Testing” and <a href="https://learn.microsoft.com/en-us/dotnet/aspire/testing/write-your-first-test?pivots=xunit">this was the first link I saw</a>, from Microsoft themselves!</p>
 
-&lt;p&gt;If you’re weird like me you avoid odd number .NET versions. I went from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Core 2.2&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 6&lt;/code&gt;, now &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 8&lt;/code&gt;. I’ll be upgrading to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 10&lt;/code&gt; when it comes out too.&lt;/p&gt;
+<p>I use XUnit for all my testing purposes (mainly from habit) and .NET Aspire has a handy XUnit template you can just create a project from and now you have integration testing support!</p>
 
-&lt;p&gt;This blog post covers setting up integration testing with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 8&lt;/code&gt;. Things may work differently in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 9&lt;/code&gt; - ie something that you need to explicitly delare in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET 8&lt;/code&gt; may be implicit in future versions.&lt;/p&gt;
+<p>Right? No. Why else would I be writing this?</p>
 
-&lt;h1 id=&quot;setting-up-correctly&quot;&gt;Setting up correctly&lt;/h1&gt;
+<p>If you’re weird like me you avoid odd number .NET versions. I went from <code class="language-plaintext highlighter-rouge">.NET Core 2.2</code> to <code class="language-plaintext highlighter-rouge">.NET 6</code>, now <code class="language-plaintext highlighter-rouge">.NET 8</code>. I’ll be upgrading to <code class="language-plaintext highlighter-rouge">.NET 10</code> when it comes out too.</p>
 
-&lt;p&gt;We’ll be creating a new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Aspire XUnit Project&lt;/code&gt; from Visual Studio:&lt;/p&gt;
+<p>This blog post covers setting up integration testing with <code class="language-plaintext highlighter-rouge">.NET 8</code>. Things may work differently in <code class="language-plaintext highlighter-rouge">.NET 9</code> - ie something that you need to explicitly delare in <code class="language-plaintext highlighter-rouge">.NET 8</code> may be implicit in future versions.</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/gKXsc5l.png&quot; alt=&quot;.NET Aspire Integration Testing Project using XUnit&quot; /&gt;&lt;/p&gt;
+<h1 id="setting-up-correctly">Setting up correctly</h1>
 
-&lt;p&gt;Once you’ve got the naming done correctly and project settings configured from the wizard, the following item is &lt;em&gt;missing&lt;/em&gt; from the template that causes it to entirely break:&lt;/p&gt;
+<p>We’ll be creating a new <code class="language-plaintext highlighter-rouge">.NET Aspire XUnit Project</code> from Visual Studio:</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;!-- Include in your top level &amp;lt;PropertyGroup&amp;gt; --&amp;gt;
-&amp;lt;PreserveCompilationContext&amp;gt;true&amp;lt;/PreserveCompilationContext&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<p><img src="https://i.imgur.com/gKXsc5l.png" alt=".NET Aspire Integration Testing Project using XUnit" /></p>
 
-&lt;p&gt;There you go, I’ve just saved you 2 hours of Googling on a lovely Saturday afternoon.&lt;/p&gt;
+<p>Once you’ve got the naming done correctly and project settings configured from the wizard, the following item is <em>missing</em> from the template that causes it to entirely break:</p>
 
-&lt;p&gt;Next step is to add a reference to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppHost&lt;/code&gt; project in your new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;XUnit&lt;/code&gt; project:&lt;/p&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- Include in your top level &lt;PropertyGroup&gt; --&gt;
+&lt;PreserveCompilationContext&gt;true&lt;/PreserveCompilationContext&gt;
+</code></pre></div></div>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/PWT3Iby.png&quot; alt=&quot;.Net Aspire Integration Testing AppHost Setup&quot; /&gt;&lt;/p&gt;
+<p>There you go, I’ve just saved you 2 hours of Googling on a lovely Saturday afternoon.</p>
 
-&lt;p&gt;This will allow your new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IntegrationTesting&lt;/code&gt; project to run the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppHost&lt;/code&gt; project, which in turn creates all the required resources, connection strings and so forth. Really bloody handy.&lt;/p&gt;
+<p>Next step is to add a reference to your <code class="language-plaintext highlighter-rouge">AppHost</code> project in your new <code class="language-plaintext highlighter-rouge">XUnit</code> project:</p>
 
-&lt;h1 id=&quot;sharedreference-projects&quot;&gt;Shared/reference projects&lt;/h1&gt;
+<p><img src="https://i.imgur.com/PWT3Iby.png" alt=".Net Aspire Integration Testing AppHost Setup" /></p>
 
-&lt;p&gt;Once of the nuances of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Aspire&lt;/code&gt; is any projects referenced as classed as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;executables&lt;/code&gt; - meaning if you need a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Model&lt;/code&gt; from your API to create an integration test from it cannot exist in the same project as your API.&lt;/p&gt;
+<p>This will allow your new <code class="language-plaintext highlighter-rouge">IntegrationTesting</code> project to run the <code class="language-plaintext highlighter-rouge">AppHost</code> project, which in turn creates all the required resources, connection strings and so forth. Really bloody handy.</p>
 
-&lt;p&gt;Annoying, but not a hill worth dying on. I migrated the models out of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;API&lt;/code&gt; project and into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Shared&lt;/code&gt; project, and referenced it as such:&lt;/p&gt;
+<h1 id="sharedreference-projects">Shared/reference projects</h1>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;ProjectReference Include=&quot;..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj&quot; IsAspireProjectResource=&quot;false&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<p>Once of the nuances of <code class="language-plaintext highlighter-rouge">.NET Aspire</code> is any projects referenced as classed as <code class="language-plaintext highlighter-rouge">executables</code> - meaning if you need a <code class="language-plaintext highlighter-rouge">Model</code> from your API to create an integration test from it cannot exist in the same project as your API.</p>
 
-&lt;p&gt;The really key part here is the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IsAspireProjectResource=&quot;false&quot;&lt;/code&gt; which allows you to reference items from within that project like you would a normal project reference:&lt;/p&gt;
+<p>Annoying, but not a hill worth dying on. I migrated the models out of the <code class="language-plaintext highlighter-rouge">API</code> project and into a <code class="language-plaintext highlighter-rouge">Shared</code> project, and referenced it as such:</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;AzureKeyVaultEmulator.Shared.Constants&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AspireConstants&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EmulatorServiceName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;keyVaultEmulatorApi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">ProjectReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj"</span> <span class="n">IsAspireProjectResource</span><span class="p">=</span><span class="s">"false"</span><span class="p">/&gt;</span>
+</code></pre></div></div>
 
-&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;AzureKeyVaultEmulator.IntegrationTests.SetupHelper&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ExampleReference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;referencedString&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AspireConstants&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EmulatorServiceName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<p>The really key part here is the <code class="language-plaintext highlighter-rouge">IsAspireProjectResource="false"</code> which allows you to reference items from within that project like you would a normal project reference:</p>
 
-&lt;p&gt;I personally recommend encapsulating any names for applications into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;const string&lt;/code&gt; like above because it allows for cleaner code and reusability.&lt;/p&gt;
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.Shared.Constants</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">AspireConstants</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">EmulatorServiceName</span> <span class="p">=</span> <span class="s">"keyVaultEmulatorApi"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-&lt;p&gt;…or I’m just lazy and can’t be bothered to update 3 strings when I make a change.&lt;/p&gt;
+<span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.IntegrationTests.SetupHelper</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ExampleReference</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">referencedString</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;h1 id=&quot;create-your-testing-environment&quot;&gt;Create your testing environment&lt;/h1&gt;
+<p>I personally recommend encapsulating any names for applications into a <code class="language-plaintext highlighter-rouge">const string</code> like above because it allows for cleaner code and reusability.</p>
 
-&lt;p&gt;Now you’re finally ready to create your testing environment! Let’s get cracking.&lt;/p&gt;
+<p>…or I’m just lazy and can’t be bothered to update 3 strings when I make a change.</p>
 
-&lt;p&gt;First off we’re going to need a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fixture&lt;/code&gt;, which encapsulates the environment for your actual test cases. This fixture will make use of the reference to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppHost&lt;/code&gt;, creating an instance of it per test class, and then using its’ exposed endpoints/services to execute tests.&lt;/p&gt;
+<h1 id="create-your-testing-environment">Create your testing environment</h1>
 
-&lt;p&gt;You don’t &lt;em&gt;strictly&lt;/em&gt; need to do this, but you really should. If you’re writing more than a single integration test then you’ll save a load of time writing/copying the same code per test case, and any faults that crop up can be fixed in a single area.&lt;/p&gt;
+<p>Now you’re finally ready to create your testing environment! Let’s get cracking.</p>
 
-&lt;p&gt;Again, reusability! It’s important - and this is why the MS documentation kind of sucks sometimes.&lt;/p&gt;
+<p>First off we’re going to need a <code class="language-plaintext highlighter-rouge">Fixture</code>, which encapsulates the environment for your actual test cases. This fixture will make use of the reference to your <code class="language-plaintext highlighter-rouge">AppHost</code>, creating an instance of it per test class, and then using its’ exposed endpoints/services to execute tests.</p>
 
-&lt;p&gt;Create a basic, minimal &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fixture&lt;/code&gt; inside of your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IntegrationTesting&lt;/code&gt; project (ideally in a suitably named folder):&lt;/p&gt;
+<p>You don’t <em>strictly</em> need to do this, but you really should. If you’re writing more than a single integration test then you’ll save a load of time writing/copying the same code per test case, and any faults that crop up can be fixed in a single area.</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sealed&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TestingFixture&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IAsyncLifetime&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DistributedApplication&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ResourceNotificationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_notificationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+<p>Again, reusability! It’s important - and this is why the MS documentation kind of sucks sometimes.</p>
 
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;InitializeAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DistributedApplicationTestingBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Projects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AzureKeyVaultEmulator_AppHost&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+<p>Create a basic, minimal <code class="language-plaintext highlighter-rouge">Fixture</code> inside of your <code class="language-plaintext highlighter-rouge">IntegrationTesting</code> project (ideally in a suitably named folder):</p>
 
-        &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConfigureHttpClientDefaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AddStandardResilienceHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">TestingFixture</span> <span class="p">:</span> <span class="n">IAsyncLifetime</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">DistributedApplication</span><span class="p">?</span> <span class="n">_app</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">ResourceNotificationService</span><span class="p">?</span> <span class="n">_notificationService</span><span class="p">;</span>
 
-        &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;BuildAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">InitializeAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="k">await</span> <span class="n">DistributedApplicationTestingBuilder</span><span class="p">.</span><span class="n">CreateAsync</span><span class="p">&lt;</span><span class="n">Projects</span><span class="p">.</span><span class="n">AzureKeyVaultEmulator_AppHost</span><span class="p">&gt;();</span>
 
-        &lt;span class=&quot;n&quot;&gt;_notificationService&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResourceNotificationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+        <span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="nf">ConfigureHttpClientDefaults</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">c</span><span class="p">.</span><span class="nf">AddStandardResilienceHandler</span><span class="p">();</span>
+        <span class="p">});</span>
 
-        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;StartAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        <span class="n">_app</span> <span class="p">=</span> <span class="k">await</span> <span class="n">builder</span><span class="p">.</span><span class="nf">BuildAsync</span><span class="p">();</span>
 
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;DisposeAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;DisposeAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConfigureAwait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+        <span class="n">_notificationService</span> <span class="p">=</span> <span class="n">_app</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">GetService</span><span class="p">&lt;</span><span class="n">ResourceNotificationService</span><span class="p">&gt;();</span>
 
-&lt;p&gt;Let’s go over the important bits here:&lt;/p&gt;
+        <span class="k">await</span> <span class="n">_app</span><span class="p">.</span><span class="nf">StartAsync</span><span class="p">();</span>
+    <span class="p">}</span>
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;InitialiseAsync()&lt;/code&gt; creates our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DistrubutedApplication&lt;/code&gt; - ie the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppHost&lt;/code&gt;. We want to keep a higher scoped reference to that for the future: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_app&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ResourceNotificationService&lt;/code&gt; allows us to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WaitAsync()&lt;/code&gt; for resources that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Aspire&lt;/code&gt; is creating before trying to use them; essentially the testing version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WaitFor(xxx)&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DisposeAsync()&lt;/code&gt; cleans up the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DistributedApplication&lt;/code&gt; on a per-class basis. Without this you will have lingering resources/ports should your tests throw an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Exception&lt;/code&gt; and bottom out.&lt;/li&gt;
-&lt;/ul&gt;
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">DisposeAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_app</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">_app</span><span class="p">.</span><span class="nf">DisposeAsync</span><span class="p">().</span><span class="nf">ConfigureAwait</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;p&gt;We’re trying to test an API, so we need a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; which points to our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;localhost:XXXX&lt;/code&gt; resource.&lt;/p&gt;
+<p>Let’s go over the important bits here:</p>
 
-&lt;p&gt;Unless we hardcode the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;port&lt;/code&gt; we need to look this up. The Microsoft docs tell you to create these on a per-test basis, gah, which is not ideal.&lt;/p&gt;
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">InitialiseAsync()</code> creates our <code class="language-plaintext highlighter-rouge">DistrubutedApplication</code> - ie the <code class="language-plaintext highlighter-rouge">AppHost</code>. We want to keep a higher scoped reference to that for the future: <code class="language-plaintext highlighter-rouge">_app</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">ResourceNotificationService</code> allows us to <code class="language-plaintext highlighter-rouge">WaitAsync()</code> for resources that <code class="language-plaintext highlighter-rouge">.NET Aspire</code> is creating before trying to use them; essentially the testing version of <code class="language-plaintext highlighter-rouge">WaitFor(xxx)</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">DisposeAsync()</code> cleans up the <code class="language-plaintext highlighter-rouge">DistributedApplication</code> on a per-class basis. Without this you will have lingering resources/ports should your tests throw an <code class="language-plaintext highlighter-rouge">Exception</code> and bottom out.</li>
+</ul>
 
-&lt;p&gt;Let’s create, and expose, a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; from our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fixture&lt;/code&gt; by extending its’ functionality:&lt;/p&gt;
+<p>We’re trying to test an API, so we need a <code class="language-plaintext highlighter-rouge">HttpClient</code> which points to our <code class="language-plaintext highlighter-rouge">localhost:XXXX</code> resource.</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Placed below _notificationService&lt;/span&gt;
+<p>Unless we hardcode the <code class="language-plaintext highlighter-rouge">port</code> we need to look this up. The Microsoft docs tell you to create these on a per-test basis, gah, which is not ideal.</p>
 
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AspireConstants&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EmulatorServiceName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+<p>Let’s create, and expose, a <code class="language-plaintext highlighter-rouge">HttpClient</code> from our <code class="language-plaintext highlighter-rouge">Fixture</code> by extending its’ functionality:</p>
 
-    &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="n">HttpClient</span><span class="p">?</span> <span class="n">_testingClient</span><span class="p">;</span> <span class="c1">// Placed below _notificationService</span>
 
-    &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_notificationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WaitForResourceAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;KnownResourceStates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Running&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WaitAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TimeSpan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;FromSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">HttpClient</span><span class="p">&gt;</span> <span class="nf">CreateHttpClient</span><span class="p">(</span><span class="kt">string</span> <span class="n">applicationName</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_testingClient</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_testingClient</span><span class="p">;</span>
 
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    <span class="n">_testingClient</span> <span class="p">=</span> <span class="n">_app</span><span class="p">!.</span><span class="nf">CreateHttpClient</span><span class="p">(</span><span class="n">applicationName</span><span class="p">);</span>
 
-&lt;p&gt;We’re now using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateHttpClient(&quot;MyApiProject&quot;)&lt;/code&gt; method which under the hood uses &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IHttpClientFactory&lt;/code&gt; &lt;a href=&quot;https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs&quot;&gt;as you can see here&lt;/a&gt;. No need to worry about hardcoding the IP and Port for your application, delegate the work to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Aspire&lt;/code&gt;.&lt;/p&gt;
+    <span class="k">await</span> <span class="n">_notificationService</span><span class="p">!.</span><span class="nf">WaitForResourceAsync</span><span class="p">(</span><span class="n">applicationName</span><span class="p">,</span> <span class="n">KnownResourceStates</span><span class="p">.</span><span class="n">Running</span><span class="p">).</span><span class="nf">WaitAsync</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">30</span><span class="p">));</span>
 
-&lt;p&gt;Next we’re making use of our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ResourceNotificationService&lt;/code&gt; to wait for the API to be alive. This is near-instant once the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppHost&lt;/code&gt; has launched but extremely useful if you have a slow start-up (such as waiting for a database server).&lt;/p&gt;
+    <span class="k">return</span> <span class="n">_testingClient</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;p&gt;We’re also making use of your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AspireConstants.EmulatorServiceName&lt;/code&gt; here to keep our code clean too! I will keep beating the reusability drum.&lt;/p&gt;
+<p>We’re now using the <code class="language-plaintext highlighter-rouge">CreateHttpClient("MyApiProject")</code> method which under the hood uses <code class="language-plaintext highlighter-rouge">IHttpClientFactory</code> <a href="https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs">as you can see here</a>. No need to worry about hardcoding the IP and Port for your application, delegate the work to <code class="language-plaintext highlighter-rouge">.NET Aspire</code>.</p>
 
-&lt;h1 id=&quot;create-your-integration-tests&quot;&gt;Create your integration test(s)&lt;/h1&gt;
+<p>Next we’re making use of our <code class="language-plaintext highlighter-rouge">ResourceNotificationService</code> to wait for the API to be alive. This is near-instant once the <code class="language-plaintext highlighter-rouge">AppHost</code> has launched but extremely useful if you have a slow start-up (such as waiting for a database server).</p>
 
-&lt;p&gt;Okay, finally, we can start writing tests in a way that is easy to maintain.&lt;/p&gt;
+<p>We’re also making use of your <code class="language-plaintext highlighter-rouge">AspireConstants.EmulatorServiceName</code> here to keep our code clean too! I will keep beating the reusability drum.</p>
 
-&lt;p&gt;First off create a new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TestClass&lt;/code&gt; for a particular &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Controller&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Endpoint&lt;/code&gt;, whatever you want to test:&lt;/p&gt;
+<h1 id="create-your-integration-tests">Create your integration test(s)</h1>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;GetSecretTests&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TestingFixture&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IClassFixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TestingFixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+<p>Okay, finally, we can start writing tests in a way that is easy to maintain.</p>
 
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<p>First off create a new <code class="language-plaintext highlighter-rouge">TestClass</code> for a particular <code class="language-plaintext highlighter-rouge">Controller</code>, <code class="language-plaintext highlighter-rouge">Endpoint</code>, whatever you want to test:</p>
 
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IClassFixture&amp;lt;TestingFixture&amp;gt;&lt;/code&gt; tells our class that we’re an testing class, and exposes the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TestingFixture&lt;/code&gt; to it.&lt;/p&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">GetSecretTests</span><span class="p">(</span><span class="n">TestingFixture</span> <span class="n">fixture</span><span class="p">)</span> <span class="p">:</span> <span class="n">IClassFixture</span><span class="p">&lt;</span><span class="n">TestingFixture</span><span class="p">&gt;</span>
+<span class="p">{</span>
 
-&lt;p&gt;We’re using the new &lt;a href=&quot;https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/primary-constructors&quot;&gt;Primary Constructor&lt;/a&gt; syntax - which my eyes/brain still haven’t gotten used to.&lt;/p&gt;
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;p&gt;Now let’s add a test and call into our API:&lt;/p&gt;
+<p>The <code class="language-plaintext highlighter-rouge">IClassFixture&lt;TestingFixture&gt;</code> tells our class that we’re an testing class, and exposes the <code class="language-plaintext highlighter-rouge">TestingFixture</code> to it.</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fact&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetSecretsBlocksRequestWithoutBearerTokenTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+<p>We’re using the new <a href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/primary-constructors">Primary Constructor</a> syntax - which my eyes/brain still haven’t gotten used to.</p>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;secrets/willfail&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+<p>Now let’s add a test and call into our API:</p>
 
-    &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpStatusCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unauthorized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StatusCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Fact</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">GetSecretsBlocksRequestWithoutBearerTokenTest</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">await</span> <span class="n">fixture</span><span class="p">.</span><span class="nf">CreateHttpClient</span><span class="p">();</span>
 
-&lt;p&gt;As you can see the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TestingFixture&lt;/code&gt; allows us to create a bog-standard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; which we can use to interact with our API - which has been hosted by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.NET Aspire&lt;/code&gt;.&lt;/p&gt;
+    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"secrets/willfail"</span><span class="p">);</span>
 
-&lt;p&gt;Remember the point I made about migrating API models to a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Shared&lt;/code&gt; project earlier? If you need to go further into validating the response, ie checking a field has been set correctly, you can do so like you would consuming a 3rd party API:&lt;/p&gt;
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Unauthorized</span><span class="p">,</span> <span class="n">response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fact&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetSecretsReturnsBackCorrectValueTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+<p>As you can see the <code class="language-plaintext highlighter-rouge">TestingFixture</code> allows us to create a bog-standard <code class="language-plaintext highlighter-rouge">HttpClient</code> which we can use to interact with our API - which has been hosted by <code class="language-plaintext highlighter-rouge">.NET Aspire</code>.</p>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;secrets/myPassword&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+<p>Remember the point I made about migrating API models to a <code class="language-plaintext highlighter-rouge">Shared</code> project earlier? If you need to go further into validating the response, ie checking a field has been set correctly, you can do so like you would consuming a 3rd party API:</p>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReadFromJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SecretResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Fact</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">GetSecretsReturnsBackCorrectValueTest</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">await</span> <span class="n">fixture</span><span class="p">.</span><span class="nf">CreateHttpClient</span><span class="p">();</span>
 
-    &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;NotEqual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secret&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"secrets/myPassword"</span><span class="p">);</span>
 
-&lt;p&gt;And that’s it! Now you have a fully reusable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fixture&lt;/code&gt; and a set up integration testing environment for your API, along with all resources required by your platform to operate.&lt;/p&gt;
+    <span class="kt">var</span> <span class="n">secret</span> <span class="p">=</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">ReadFromJsonAsync</span><span class="p">&lt;</span><span class="n">SecretResponse</span><span class="p">&gt;();</span>
 
-&lt;h1 id=&quot;final-notes&quot;&gt;Final notes&lt;/h1&gt;
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">NotEqual</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">,</span> <span class="n">secret</span><span class="p">?.</span><span class="n">Value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;p&gt;If you’re using a versioned API, and don’t want to repeat yourself endlessly (reusabili- okay I’ll stop) you can modify the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateHttpClient&lt;/code&gt; method in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fixture&lt;/code&gt; to do that for you. I’m using the following:&lt;/p&gt;
+<p>And that’s it! Now you have a fully reusable <code class="language-plaintext highlighter-rouge">Fixture</code> and a set up integration testing environment for your API, along with all resources required by your platform to operate.</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PackageReference&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Asp.Versioning.Http&quot;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;8.1.0&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PackageReference&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Asp.Versioning.Http.Client&quot;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;8.1.0&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;/&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<h1 id="final-notes">Final notes</h1>
 
-&lt;p&gt;And implementing them like so:&lt;/p&gt;
+<p>If you’re using a versioned API, and don’t want to repeat yourself endlessly (reusabili- okay I’ll stop) you can modify the <code class="language-plaintext highlighter-rouge">CreateHttpClient</code> method in your <code class="language-plaintext highlighter-rouge">Fixture</code> to do that for you. I’m using the following:</p>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">PackageReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"Asp.Versioning.Http"</span> <span class="n">Version</span><span class="p">=</span><span class="s">"8.1.0"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="n">PackageReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"Asp.Versioning.Http.Client"</span> <span class="n">Version</span><span class="p">=</span><span class="s">"8.1.0"</span> <span class="p">/&gt;</span>
+</code></pre></div></div>
 
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AspireConstants&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EmulatorServiceName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+<p>And implementing them like so:</p>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApiVersionHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;QueryStringApiVersionWriter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApiVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;InnerHandler&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;HttpClientHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Make sure you add this!&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="n">HttpClient</span><span class="p">?</span> <span class="n">_testingClient</span><span class="p">;</span>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endpoint&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetEndpoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">HttpClient</span><span class="p">&gt;</span> <span class="nf">CreateHttpClient</span><span class="p">(</span><span class="kt">double</span> <span class="n">version</span><span class="p">,</span> <span class="kt">string</span> <span class="n">applicationName</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_testingClient</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_testingClient</span><span class="p">;</span>
 
-    &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;BaseAddress&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endpoint&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    <span class="kt">var</span> <span class="n">opt</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">ApiVersionHandler</span><span class="p">(</span><span class="k">new</span> <span class="nf">QueryStringApiVersionWriter</span><span class="p">(),</span> <span class="k">new</span> <span class="nf">ApiVersion</span><span class="p">(</span><span class="n">version</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">InnerHandler</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClientHandler</span><span class="p">()</span> <span class="c1">// Make sure you add this!</span>
+    <span class="p">};</span>
 
-    &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_notificationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WaitForResourceAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applicationName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;KnownResourceStates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Running&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WaitAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TimeSpan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;FromSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    <span class="kt">var</span> <span class="n">endpoint</span> <span class="p">=</span> <span class="n">_app</span><span class="p">!.</span><span class="nf">GetEndpoint</span><span class="p">(</span><span class="n">applicationName</span><span class="p">);</span>
 
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_testingClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    <span class="n">_testingClient</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">BaseAddress</span> <span class="p">=</span> <span class="n">endpoint</span>
+    <span class="p">};</span>
 
-&lt;p&gt;And then configure your tests to alter the API version like so:&lt;/p&gt;
+    <span class="k">await</span> <span class="n">_notificationService</span><span class="p">!.</span><span class="nf">WaitForResourceAsync</span><span class="p">(</span><span class="n">applicationName</span><span class="p">,</span> <span class="n">KnownResourceStates</span><span class="p">.</span><span class="n">Running</span><span class="p">).</span><span class="nf">WaitAsync</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">30</span><span class="p">));</span>
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Theory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;InlineData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;InlineData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetSecretsReturnsBackCorrectValueTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fixture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateHttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Included here!&lt;/span&gt;
+    <span class="k">return</span> <span class="n">_testingClient</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;secrets/myPassword&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+<p>And then configure your tests to alter the API version like so:</p>
 
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secret&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReadFromJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SecretResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">Theory</span><span class="p">]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="m">1.0</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">InlineData</span><span class="p">(</span><span class="m">1.1</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">GetSecretsReturnsBackCorrectValueTest</span><span class="p">(</span><span class="kt">double</span> <span class="n">version</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">await</span> <span class="n">fixture</span><span class="p">.</span><span class="nf">CreateHttpClient</span><span class="p">(</span><span class="n">version</span><span class="p">);</span> <span class="c1">// Included here!</span>
 
-    &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;NotEqual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;secret&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"secrets/myPassword"</span><span class="p">);</span>
 
-&lt;p&gt;This implementation will append &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;api-version={version}&lt;/code&gt; to the end ouf our request, where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;version&lt;/code&gt; is provided by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[InlineData]&lt;/code&gt;.&lt;/p&gt;
+    <span class="kt">var</span> <span class="n">secret</span> <span class="p">=</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">ReadFromJsonAsync</span><span class="p">&lt;</span><span class="n">SecretResponse</span><span class="p">&gt;();</span>
 
-&lt;p&gt;You can alter where that version goes, I was going to link the documentation as a tongue-in-cheek joke but in classic Microsoft fashion this happened:&lt;/p&gt;
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">NotEqual</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">,</span> <span class="n">secret</span><span class="p">?.</span><span class="n">Value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/0OeGTiM.png&quot; alt=&quot;Documentation missing from MS&quot; /&gt;&lt;/p&gt;
+<p>This implementation will append <code class="language-plaintext highlighter-rouge">api-version={version}</code> to the end ouf our request, where <code class="language-plaintext highlighter-rouge">version</code> is provided by <code class="language-plaintext highlighter-rouge">[InlineData]</code>.</p>
 
-&lt;p&gt;Honestly couldn’t make it up.&lt;/p&gt;
+<p>You can alter where that version goes, I was going to link the documentation as a tongue-in-cheek joke but in classic Microsoft fashion this happened:</p>
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term=".NET 8" /><category term=".NET Aspire" /><category term="integration testing" /><category term="C#" /><summary type="html">Introduction</summary></entry><entry><title type="html">Fast Static Jekyll Blog Deployment with Azure CI/C</title><link href="https://jamesgould.dev/posts/easy-azure-static-webapp-blog/" rel="alternate" type="text/html" title="Fast Static Jekyll Blog Deployment with Azure CI/C" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>https://jamesgould.dev/posts/easy-azure-static-webapp-blog</id><content type="html" xml:base="https://jamesgould.dev/posts/easy-azure-static-webapp-blog/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<p><img src="https://i.imgur.com/0OeGTiM.png" alt="Documentation missing from MS" /></p>
 
-&lt;p&gt;A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.&lt;/p&gt;
+<p>Honestly couldn’t make it up.</p>
 
-&lt;p&gt;If you’re a fan of horror stories feel free to read my &lt;a href=&quot;https://jamesgould.dev/posts/scuffed-publish/&quot;&gt;initial attempt here&lt;/a&gt;.&lt;/p&gt;
+<p>Thanks for reading!</p>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term=".NET 8" /><category term=".NET Aspire" /><category term="integration testing" /><category term="C#" /><summary type="html"><![CDATA[Introduction]]></summary></entry><entry><title type="html">Fast Static Jekyll Blog Deployment with Azure CI/CD</title><link href="http://localhost:4000/posts/easy-azure-static-webapp-blog/" rel="alternate" type="text/html" title="Fast Static Jekyll Blog Deployment with Azure CI/CD" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>http://localhost:4000/posts/easy-azure-static-webapp-blog</id><content type="html" xml:base="http://localhost:4000/posts/easy-azure-static-webapp-blog/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
-&lt;p&gt;Some future requirements have come up which meant that I not only needed a proper &lt;em&gt;build&lt;/em&gt; pipeline, but also a fast one.&lt;/p&gt;
+<p>A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.</p>
 
-&lt;p&gt;For those unaware, Azure Devops has a free tier which includes 1800 minutes of build time per month, refreshing on the 1st of the month.&lt;/p&gt;
+<p>If you’re a fan of horror stories feel free to read my <a href="https://jamesgould.dev/posts/scuffed-publish/">initial attempt here</a>.</p>
 
-&lt;p&gt;I’ve now built a true, fairly fast CI/CD pipeline to build and release this blog out and I’d like to share my findings with you, dear reader.&lt;/p&gt;
+<p>Some future requirements have come up which meant that I not only needed a proper <em>build</em> pipeline, but also a fast one.</p>
 
-&lt;p&gt;In case you just want the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YAML&lt;/code&gt; and nothing else, here it is:&lt;/p&gt;
+<p>For those unaware, Azure Devops has a free tier which includes 1800 minutes of build time per month, refreshing on the 1st of the month.</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;trigger:
+<p>I’ve now built a true, fairly fast CI/CD pipeline to build and release this blog out and I’d like to share my findings with you, dear reader.</p>
+
+<p>In case you just want the <code class="language-plaintext highlighter-rouge">YAML</code> and nothing else, here it is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trigger:
 - master
 
 pool:
-  vmImage: &apos;ubuntu-latest&apos;
+  vmImage: 'ubuntu-latest'
 
 schedules:
-- cron: &quot;5 0 * * *&quot;
+- cron: "5 0 * * *"
   displayName: Daily release for scheduled posts
   branches:
     include: 
@@ -281,150 +297,150 @@ schedules:
 steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: &apos;&amp;gt;= 2.5&apos;
+    versionSpec: '&gt;= 2.5'
 
 - script: |
     gem install jekyll bundler --no-rdoc
     bundle install --retry=3 --jobs=4
-  displayName: &apos;bundle install&apos;
+  displayName: 'bundle install'
 
 - task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
-    displayName: &apos;Jekyll Build&apos;
+    displayName: 'Jekyll Build'
     
 - task: AzureStaticWebApp@0
   inputs:
-      app_location: &apos;/_site&apos;
-      api_location: &apos;api&apos;
-      output_location: &apos;/_site&apos;
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;h1 id=&quot;lets-break-it-down&quot;&gt;Let’s break it down&lt;/h1&gt;
+<h1 id="lets-break-it-down">Let’s break it down</h1>
 
-&lt;p&gt;Let’s jump into the nitty-gritty of what this build config is doing, and why.&lt;/p&gt;
+<p>Let’s jump into the nitty-gritty of what this build config is doing, and why.</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;schedules:
-- cron: &quot;5 0 * * *&quot;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>schedules:
+- cron: "5 0 * * *"
   displayName: Daily release for scheduled posts
   branches:
     include: 
      - master
   always: true 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;This is an optional include that will build the blog on a schedule, with the cron being every day at 00:05am. This is so I can schedule posts into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;all_collections/_posts&lt;/code&gt; directory and have them release on the date of the post.&lt;/p&gt;
+<p>This is an optional include that will build the blog on a schedule, with the cron being every day at 00:05am. This is so I can schedule posts into the <code class="language-plaintext highlighter-rouge">all_collections/_posts</code> directory and have them release on the date of the post.</p>
 
-&lt;p&gt;If you don’t want to schedule a build and simply want to trigger the release when you publish a new post, delete this section.&lt;/p&gt;
+<p>If you don’t want to schedule a build and simply want to trigger the release when you publish a new post, delete this section.</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;steps:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: &apos;&amp;gt;= 2.5&apos;
+    versionSpec: '&gt;= 2.5'
 
 - script: |
     gem install jekyll bundler --no-rdoc
     bundle install --retry=3 --jobs=4
-  displayName: &apos;bundle install&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  displayName: 'bundle install'
+</code></pre></div></div>
 
-&lt;p&gt;This is a 2 step part which has been the majority of the time sink I’ve experienced.&lt;/p&gt;
+<p>This is a 2 step part which has been the majority of the time sink I’ve experienced.</p>
 
-&lt;p&gt;First we’re specifying which version of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ruby&lt;/code&gt; to use, as &lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll advises against using spec 3.0 or higher in their quickstart guide.&lt;/a&gt;&lt;/p&gt;
+<p>First we’re specifying which version of <code class="language-plaintext highlighter-rouge">Ruby</code> to use, as <a href="https://jekyllrb.com/docs/">Jekyll advises against using spec 3.0 or higher in their quickstart guide.</a></p>
 
-&lt;p&gt;Next we’re pipelining two scripts to set the stage for our blog:&lt;/p&gt;
+<p>Next we’re pipelining two scripts to set the stage for our blog:</p>
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler --no-rdoc&lt;/code&gt; which will allow the actual build script used by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Jekyll&lt;/code&gt; to run correctly.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install --retry=3 --jobs=4&lt;/code&gt; which will then install our dependencies etc, ready for compiling the blog markdown into HTML.&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">gem install jekyll bundler --no-rdoc</code> which will allow the actual build script used by <code class="language-plaintext highlighter-rouge">Jekyll</code> to run correctly.</li>
+  <li><code class="language-plaintext highlighter-rouge">bundle install --retry=3 --jobs=4</code> which will then install our dependencies etc, ready for compiling the blog markdown into HTML.</li>
+</ul>
 
-&lt;p&gt;Let’s take a deeper look into each.&lt;/p&gt;
+<p>Let’s take a deeper look into each.</p>
 
-&lt;h1 id=&quot;lightening-fast&quot;&gt;Lightening fast?&lt;/h1&gt;
+<h1 id="lightening-fast">Lightening fast?</h1>
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler --no-rdoc&lt;/code&gt; comprises of two parts, the command to run and the parameters.&lt;/p&gt;
+<p><code class="language-plaintext highlighter-rouge">gem install jekyll bundler --no-rdoc</code> comprises of two parts, the command to run and the parameters.</p>
 
-&lt;p&gt;The initital command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem install jekyll bundler&lt;/code&gt; typically takes around 2m30s to run on the Azure Free tier. Part of this, for whatever reason, is building documentation for the script which we, as “set-and-forget” pipeline runners, don’t care about. That’s where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--no-rdoc&lt;/code&gt; comes in.&lt;/p&gt;
+<p>The initital command <code class="language-plaintext highlighter-rouge">gem install jekyll bundler</code> typically takes around 2m30s to run on the Azure Free tier. Part of this, for whatever reason, is building documentation for the script which we, as “set-and-forget” pipeline runners, don’t care about. That’s where <code class="language-plaintext highlighter-rouge">--no-rdoc</code> comes in.</p>
 
-&lt;p&gt;With this addition we skip the step where the documentation is created. This shaved around 30s off the total build time, saving our precious free minutes!&lt;/p&gt;
+<p>With this addition we skip the step where the documentation is created. This shaved around 30s off the total build time, saving our precious free minutes!</p>
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install --retry=3 --jobs=4&lt;/code&gt; is an important part of the process as building the Jekyll site requires the bundle to be installed. Some caching can be done here to mitigate further time, but I haven’t gotten to that yet.&lt;/p&gt;
+<p><code class="language-plaintext highlighter-rouge">bundle install --retry=3 --jobs=4</code> is an important part of the process as building the Jekyll site requires the bundle to be installed. Some caching can be done here to mitigate further time, but I haven’t gotten to that yet.</p>
 
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--job=4&lt;/code&gt; is the key part here. Without it, we run the process on a single core. By specifying &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4&lt;/code&gt; we’re able to run our command on 4 cores, shaving off a bunch of time. I didn’t really notice this before, but I took it out for a trial run and it added an extra couple of minutes to the build time.&lt;/p&gt;
+<p>The <code class="language-plaintext highlighter-rouge">--job=4</code> is the key part here. Without it, we run the process on a single core. By specifying <code class="language-plaintext highlighter-rouge">4</code> we’re able to run our command on 4 cores, shaving off a bunch of time. I didn’t really notice this before, but I took it out for a trial run and it added an extra couple of minutes to the build time.</p>
 
-&lt;h1 id=&quot;the-boring-stuff&quot;&gt;The boring stuff&lt;/h1&gt;
+<h1 id="the-boring-stuff">The boring stuff</h1>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: CmdLine@2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
-    displayName: &apos;Jekyll Build&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    displayName: 'Jekyll Build'
+</code></pre></div></div>
 
-&lt;p&gt;Now that we’ve gotten our ducks firmly in a row it’s time to build out &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xxx.md&lt;/code&gt; files into actual HTML. This is a simple command-line script which runs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jekyll build&lt;/code&gt;. Only takes about 1s, no point trying to optimise it.&lt;/p&gt;
+<p>Now that we’ve gotten our ducks firmly in a row it’s time to build out <code class="language-plaintext highlighter-rouge">xxx.md</code> files into actual HTML. This is a simple command-line script which runs <code class="language-plaintext highlighter-rouge">bundle exec jekyll build</code>. Only takes about 1s, no point trying to optimise it.</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- task: AzureStaticWebApp@0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- task: AzureStaticWebApp@0
   inputs:
-      app_location: &apos;/_site&apos;
-      api_location: &apos;api&apos;
-      output_location: &apos;/_site&apos;
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;At this point we’ve done all the required steps and we’re ready to publish out to our Azure Static Web App. We have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pipeline variable&lt;/code&gt; set called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deployment_token&lt;/code&gt; which you can grab from the configuration blade of your Static Web App (detailed explanation on the previous post linked above).&lt;/p&gt;
+<p>At this point we’ve done all the required steps and we’re ready to publish out to our Azure Static Web App. We have a <code class="language-plaintext highlighter-rouge">pipeline variable</code> set called <code class="language-plaintext highlighter-rouge">deployment_token</code> which you can grab from the configuration blade of your Static Web App (detailed explanation on the previous post linked above).</p>
 
-&lt;p&gt;This step takes the ready &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory and publishes it out.&lt;/p&gt;
+<p>This step takes the ready <code class="language-plaintext highlighter-rouge">_site</code> directory and publishes it out.</p>
 
-&lt;h2 id=&quot;aaaaand-breathe&quot;&gt;Aaaaand breathe.&lt;/h2&gt;
+<h2 id="aaaaand-breathe">Aaaaand breathe.</h2>
 
-&lt;p&gt;Cool, we’re all set. It’s running, total time is typically just over 3 minutes which means we can run a whole bunch of these each day at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00:05&lt;/code&gt; without stressing.&lt;/p&gt;</content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry><entry><title type="html">Publishing Static Web App Blog via Azure Devops (I’m Sinning)</title><link href="https://jamesgould.dev/posts/sinning-via-azure-devops/" rel="alternate" type="text/html" title="Publishing Static Web App Blog via Azure Devops (I’m Sinning)" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>https://jamesgould.dev/posts/sinning-via-azure-devops</id><content type="html" xml:base="https://jamesgould.dev/posts/sinning-via-azure-devops/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<p>Cool, we’re all set. It’s running, total time is typically just over 3 minutes which means we can run a whole bunch of these each day at <code class="language-plaintext highlighter-rouge">00:05</code> without stressing.</p>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html"><![CDATA[Introduction]]></summary></entry><entry><title type="html">Publishing Static Web App Blog via Azure Devops</title><link href="http://localhost:4000/posts/sinning-via-azure-devops/" rel="alternate" type="text/html" title="Publishing Static Web App Blog via Azure Devops" /><published>2022-01-28T00:00:00+00:00</published><updated>2022-01-28T00:00:00+00:00</updated><id>http://localhost:4000/posts/sinning-via-azure-devops</id><content type="html" xml:base="http://localhost:4000/posts/sinning-via-azure-devops/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
-&lt;p&gt;When deciding to build a blog there were a few options:&lt;/p&gt;
+<p>When deciding to build a blog there were a few options:</p>
 
-&lt;ul&gt;
-  &lt;li&gt;A custom domain name. Medium gets on my nerves and I wouldn’t want to inflict that on somebody else.&lt;/li&gt;
-  &lt;li&gt;Easy mechanism to design and publish posts, markdown being the optimal choice.&lt;/li&gt;
-  &lt;li&gt;A theme that was minimalistic but flexible.&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>A custom domain name. Medium gets on my nerves and I wouldn’t want to inflict that on somebody else.</li>
+  <li>Easy mechanism to design and publish posts, markdown being the optimal choice.</li>
+  <li>A theme that was minimalistic but flexible.</li>
+</ul>
 
-&lt;p&gt;Initially I settled on &lt;a href=&quot;https://hashnode.com/&quot;&gt;Hashnode&lt;/a&gt; which allowed easy setup, 1-click themes and a free custom domain name alias.&lt;/p&gt;
+<p>Initially I settled on <a href="https://hashnode.com/">Hashnode</a> which allowed easy setup, 1-click themes and a free custom domain name alias.</p>
 
-&lt;p&gt;After setting it up it was swiftly apparent how bloated the platform was. I just wanted somewhere to write up interesting topics, not participate in some global developer community where we all pass-the-upvote and #followback.&lt;/p&gt;
+<p>After setting it up it was swiftly apparent how bloated the platform was. I just wanted somewhere to write up interesting topics, not participate in some global developer community where we all pass-the-upvote and #followback.</p>
 
-&lt;p&gt;With limited knowledge in the space I stumbled across Jekyll, an open source markdown-driven platform which generates static HTML from markdown files with an associated theme. Perfect!&lt;/p&gt;
+<p>With limited knowledge in the space I stumbled across Jekyll, an open source markdown-driven platform which generates static HTML from markdown files with an associated theme. Perfect!</p>
 
-&lt;p&gt;I got my site set up locally, got the theme installed (took some time) and got the build working so that updates I published would actually generate into the HTML.&lt;/p&gt;
+<p>I got my site set up locally, got the theme installed (took some time) and got the build working so that updates I published would actually generate into the HTML.</p>
 
-&lt;p&gt;Next step: deployment.&lt;/p&gt;
+<p>Next step: deployment.</p>
 
-&lt;p&gt;I’m no guru with CI/CD. I can pick apart pre-assembled YAML files and make them work, or follow a wizard to generate the tasks behind the scenes. If there’s a bug, I bin the lot off and start again. I just needed to find a way to build and publish the site to some web server every time I pushed a new post to the repository the blog sat on. Should be easy enough.&lt;/p&gt;
+<p>I’m no guru with CI/CD. I can pick apart pre-assembled YAML files and make them work, or follow a wizard to generate the tasks behind the scenes. If there’s a bug, I bin the lot off and start again. I just needed to find a way to build and publish the site to some web server every time I pushed a new post to the repository the blog sat on. Should be easy enough.</p>
 
-&lt;h1 id=&quot;pragmatism&quot;&gt;Pragmatism&lt;/h1&gt;
+<h1 id="pragmatism">Pragmatism</h1>
 
-&lt;p&gt;I settled on an Azure Static Web App. It offers a generous free tier with an automatic SSL certificate, free domain mapping and I could easily deploy my static content manually via Kudu. I wanted to automate this step because I’m a lazy bugger, so I gave it a shot.&lt;/p&gt;
+<p>I settled on an Azure Static Web App. It offers a generous free tier with an automatic SSL certificate, free domain mapping and I could easily deploy my static content manually via Kudu. I wanted to automate this step because I’m a lazy bugger, so I gave it a shot.</p>
 
-&lt;p&gt;Frankly I won’t waste your time at this stage with waffling on about my attempts to get various ruby scripts running, with artifacts being shoved around etc. There are guides out there if you’re interested - I couldn’t make heads nor tails of them.&lt;/p&gt;
+<p>Frankly I won’t waste your time at this stage with waffling on about my attempts to get various ruby scripts running, with artifacts being shoved around etc. There are guides out there if you’re interested - I couldn’t make heads nor tails of them.</p>
 
-&lt;p&gt;Here’s what I knew worked:&lt;/p&gt;
+<p>Here’s what I knew worked:</p>
 
-&lt;ul&gt;
-  &lt;li&gt;Locally the blog compiled and looked fine once running with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jeykll serve&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory compiled fully, taking new additions to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;all_collections/_posts&lt;/code&gt; directory and building them into a HTML file.&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>Locally the blog compiled and looked fine once running with <code class="language-plaintext highlighter-rouge">bundle exec jeykll serve</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">_site</code> directory compiled fully, taking new additions to the <code class="language-plaintext highlighter-rouge">all_collections/_posts</code> directory and building them into a HTML file.</li>
+</ul>
 
-&lt;p&gt;Now, cue the super scuffed approach to deploying this blog.&lt;/p&gt;
+<p>Now, cue the super scuffed approach to deploying this blog.</p>
 
-&lt;h1 id=&quot;rules-are-meant-to-be-completely-deleted-from-the-file&quot;&gt;Rules are meant to be completely deleted from the file&lt;/h1&gt;
+<h1 id="rules-are-meant-to-be-completely-deleted-from-the-file">Rules are meant to be completely deleted from the file</h1>
 
-&lt;p&gt;For this &lt;em&gt;pragmatic&lt;/em&gt; guide we need to commit our first crime: remove the exclusion of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;. How dreadful!&lt;/p&gt;
+<p>For this <em>pragmatic</em> guide we need to commit our first crime: remove the exclusion of <code class="language-plaintext highlighter-rouge">_site</code> from the <code class="language-plaintext highlighter-rouge">.gitignore</code>. How dreadful!</p>
 
-&lt;h1 id=&quot;forgive-me-microsoft-for-i-have-sinned&quot;&gt;Forgive me Microsoft for I have sinned.&lt;/h1&gt;
+<h1 id="forgive-me-microsoft-for-i-have-sinned">Forgive me Microsoft for I have sinned.</h1>
 
-&lt;p&gt;Here’s the dreadful YAML file to use for publishing a single post. It’s not pretty, but it works. All in the name of getting it working without too much glitter:&lt;/p&gt;
+<p>Here’s the dreadful YAML file to use for publishing a single post. It’s not pretty, but it works. All in the name of getting it working without too much glitter:</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;trigger:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trigger:
   - master
 
 pool:
@@ -435,114 +451,114 @@ steps:
     submodules: true
   - task: AzureStaticWebApp@0
     inputs:
-      app_location: &apos;/_site&apos;
-      api_location: &apos;api&apos;
-      output_location: &apos;/_site&apos;
+      app_location: '/_site'
+      api_location: 'api'
+      output_location: '/_site'
       azure_static_web_apps_api_token: $(deployment_token)
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;At the root of your Jeykll blog add a new file called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipeline.yml&lt;/code&gt; and add the above as the contents.&lt;/p&gt;
+<p>At the root of your Jeykll blog add a new file called <code class="language-plaintext highlighter-rouge">azure-pipeline.yml</code> and add the above as the contents.</p>
 
-&lt;p&gt;Don’t worry about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;api_location: &apos;api&apos;&lt;/code&gt; section - it does nothing and frankly I’m scared to touch it.&lt;/p&gt;
+<p>Don’t worry about the <code class="language-plaintext highlighter-rouge">api_location: 'api'</code> section - it does nothing and frankly I’m scared to touch it.</p>
 
-&lt;h1 id=&quot;azure-devops---im-sorry&quot;&gt;Azure Devops - I’m sorry.&lt;/h1&gt;
+<h1 id="azure-devops---im-sorry">Azure Devops - I’m sorry.</h1>
 
-&lt;p&gt;&lt;strong&gt;As a heads up I had this blog under an old alias and let the domain expire (like a fool). I’ve migrated it to this domain, so the names look a little off!&lt;/strong&gt;&lt;/p&gt;
+<p><strong>As a heads up I had this blog under an old alias and let the domain expire (like a fool). I’ve migrated it to this domain, so the names look a little off!</strong></p>
 
-&lt;p&gt;First, create the Azure Static Web App. Once it’s deployed, you should land on the dashboard for the resource:&lt;/p&gt;
+<p>First, create the Azure Static Web App. Once it’s deployed, you should land on the dashboard for the resource:</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/WNGBMuU.png&quot; alt=&quot;Azure Devops - Static Web App With Jekyll&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/WNGBMuU.png" alt="Azure Devops - Static Web App With Jekyll" /></p>
 
-&lt;p&gt;Here you can set up your custom domain if you like - the verification for the TXT DNS addition took 3 (!) days to fully detect in the portal. We’ll skip this step for now.&lt;/p&gt;
+<p>Here you can set up your custom domain if you like - the verification for the TXT DNS addition took 3 (!) days to fully detect in the portal. We’ll skip this step for now.</p>
 
-&lt;p&gt;Whilst on Overview, find the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Manage Deployment Token&lt;/code&gt; button on the right hand side.&lt;/p&gt;
+<p>Whilst on Overview, find the <code class="language-plaintext highlighter-rouge">Manage Deployment Token</code> button on the right hand side.</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/Mh4F6gs.png&quot; alt=&quot;Azure Devops - Manage Deployment Token&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/Mh4F6gs.png" alt="Azure Devops - Manage Deployment Token" /></p>
 
-&lt;p&gt;Click the button (of course), copy the token or keep the blade open for the next step.&lt;/p&gt;
+<p>Click the button (of course), copy the token or keep the blade open for the next step.</p>
 
-&lt;p&gt;Go to your DevOps organisation -&amp;gt; Project containing the blog repository -&amp;gt; Pipelines.&lt;/p&gt;
+<p>Go to your DevOps organisation -&gt; Project containing the blog repository -&gt; Pipelines.</p>
 
-&lt;p&gt;&lt;strong&gt;You won’t have the “Blog” pipeline there, don’t worry!&lt;/strong&gt;&lt;/p&gt;
+<p><strong>You won’t have the “Blog” pipeline there, don’t worry!</strong></p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/K71qLWI.png&quot; alt=&quot;Azure Devops - New Pipeline for Jekyll Blog&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/K71qLWI.png" alt="Azure Devops - New Pipeline for Jekyll Blog" /></p>
 
-&lt;p&gt;Click on new pipeline to begin sinning like me&lt;/p&gt;
+<p>Click on new pipeline to begin sinning like me</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/W7X3oux.png&quot; alt=&quot;Azure Devops - New Pipeline&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/W7X3oux.png" alt="Azure Devops - New Pipeline" /></p>
 
-&lt;p&gt;Select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Azure Repos Git&lt;/code&gt; option, assuming that’s where your blog repository is stored.&lt;/p&gt;
+<p>Select the <code class="language-plaintext highlighter-rouge">Azure Repos Git</code> option, assuming that’s where your blog repository is stored.</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/YklnYR7.png&quot; alt=&quot;Azure Devops - VCS select&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/YklnYR7.png" alt="Azure Devops - VCS select" /></p>
 
-&lt;p&gt;Select your repository&lt;/p&gt;
+<p>Select your repository</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/xYX3uMb.png&quot; alt=&quot;Azure devops - repo select&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/xYX3uMb.png" alt="Azure devops - repo select" /></p>
 
-&lt;p&gt;Now that you’ve saved our sinful pipeline &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.yml&lt;/code&gt; file, select &lt;em&gt;Existing Azure Pipelines YAML file&lt;/em&gt;&lt;/p&gt;
+<p>Now that you’ve saved our sinful pipeline <code class="language-plaintext highlighter-rouge">.yml</code> file, select <em>Existing Azure Pipelines YAML file</em></p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/RJPnFwo.png&quot; alt=&quot;Azure Devops - Existing YAML file&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/RJPnFwo.png" alt="Azure Devops - Existing YAML file" /></p>
 
-&lt;p&gt;Select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipelines.yml&lt;/code&gt; file from the root directory. For whatever reason Jekyll builds a copy to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory, be sure &lt;strong&gt;not&lt;/strong&gt; to use that one. Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Continue&lt;/code&gt; once you’re done.&lt;/p&gt;
+<p>Select the <code class="language-plaintext highlighter-rouge">azure-pipelines.yml</code> file from the root directory. For whatever reason Jekyll builds a copy to the <code class="language-plaintext highlighter-rouge">_site</code> directory, be sure <strong>not</strong> to use that one. Click <code class="language-plaintext highlighter-rouge">Continue</code> once you’re done.</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/YSdGLO2.png&quot; alt=&quot;Azure Devops - YML file select&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/YSdGLO2.png" alt="Azure Devops - YML file select" /></p>
 
-&lt;p&gt;Our &lt;del&gt;great&lt;/del&gt; functional pipeline text will load in&lt;/p&gt;
+<p>Our <del>great</del> functional pipeline text will load in</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/1GkALI3.png&quot; alt=&quot;Azure Devops - Pipeline Review&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/1GkALI3.png" alt="Azure Devops - Pipeline Review" /></p>
 
-&lt;p&gt;Now’s the time to link the pipeline to our new, shiny Azure Static Web App. Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Variables&lt;/code&gt; in the top right&lt;/p&gt;
+<p>Now’s the time to link the pipeline to our new, shiny Azure Static Web App. Click <code class="language-plaintext highlighter-rouge">Variables</code> in the top right</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/7oKsEvr.png&quot; alt=&quot;Azure Devops - Variables&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/7oKsEvr.png" alt="Azure Devops - Variables" /></p>
 
-&lt;p&gt;Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;New Variable&lt;/code&gt;&lt;/p&gt;
+<p>Click <code class="language-plaintext highlighter-rouge">New Variable</code></p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/Ef6tOg9.png&quot; alt=&quot;Azure Devops - New Variable&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/Ef6tOg9.png" alt="Azure Devops - New Variable" /></p>
 
-&lt;p&gt;If you take a look at the bottom of our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azure-pipelines&lt;/code&gt; file, we have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$variable&lt;/code&gt; called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deployment_token&lt;/code&gt;. That’s the name of our variable. Make sure to add the token from our Static Web App blade from earlier to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt; field:&lt;/p&gt;
+<p>If you take a look at the bottom of our <code class="language-plaintext highlighter-rouge">azure-pipelines</code> file, we have a <code class="language-plaintext highlighter-rouge">$variable</code> called <code class="language-plaintext highlighter-rouge">deployment_token</code>. That’s the name of our variable. Make sure to add the token from our Static Web App blade from earlier to the <code class="language-plaintext highlighter-rouge">value</code> field:</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/yY9rvt2.png&quot; alt=&quot;Azure Devops - Variable Added&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/yY9rvt2.png" alt="Azure Devops - Variable Added" /></p>
 
-&lt;p&gt;You can mark it as secret if you like, I haven’t because my partner can’t even find the monitor power button let alone understand Azure Pipelines.&lt;/p&gt;
+<p>You can mark it as secret if you like, I haven’t because my partner can’t even find the monitor power button let alone understand Azure Pipelines.</p>
 
-&lt;p&gt;You should see your new variable appear in the list, click save.&lt;/p&gt;
+<p>You should see your new variable appear in the list, click save.</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/z448xg4.png&quot; alt=&quot;Azure Devops - Variable saved&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/z448xg4.png" alt="Azure Devops - Variable saved" /></p>
 
-&lt;p&gt;Now save your pipeline by using the arrow on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Run&lt;/code&gt; button to show the hidden, very useful option&lt;/p&gt;
+<p>Now save your pipeline by using the arrow on the <code class="language-plaintext highlighter-rouge">Run</code> button to show the hidden, very useful option</p>
 
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/APPyFYX.png&quot; alt=&quot;i cant be bothered anymore&quot; /&gt;&lt;/p&gt;
+<p><img src="https://i.imgur.com/APPyFYX.png" alt="i cant be bothered anymore" /></p>
 
-&lt;p&gt;Awesome, your pipeline is set up. Now every time you push to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master&lt;/code&gt;, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_site&lt;/code&gt; directory will deploy to your Azure Static Web App. &lt;a href=&quot;https://www.youtube.com/watch?v=OUXvrWeQU0g&quot;&gt;Please clap&lt;/a&gt;&lt;/p&gt;
+<p>Awesome, your pipeline is set up. Now every time you push to <code class="language-plaintext highlighter-rouge">master</code>, the <code class="language-plaintext highlighter-rouge">_site</code> directory will deploy to your Azure Static Web App. <a href="https://www.youtube.com/watch?v=OUXvrWeQU0g">Please clap</a></p>
 
-&lt;h1 id=&quot;building-and-publishing-your-site&quot;&gt;Building and publishing your site&lt;/h1&gt;
+<h1 id="building-and-publishing-your-site">Building and publishing your site</h1>
 
-&lt;p&gt;Now for the fun, extra scuffed section.&lt;/p&gt;
+<p>Now for the fun, extra scuffed section.</p>
 
-&lt;p&gt;Every time a new blog post gets added, we need to build the blog. This converts the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.md&lt;/code&gt; files containing our very important ramblings into readable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HTML&lt;/code&gt; files. How exciting!&lt;/p&gt;
+<p>Every time a new blog post gets added, we need to build the blog. This converts the <code class="language-plaintext highlighter-rouge">.md</code> files containing our very important ramblings into readable <code class="language-plaintext highlighter-rouge">HTML</code> files. How exciting!</p>
 
-&lt;p&gt;Now I’m lazy, if you couldn’t already tell. I can’t be bothered to write nice commits for things people will never see, so I wrote a &lt;del&gt;horrendous&lt;/del&gt; functional script to speed this part up too.&lt;/p&gt;
+<p>Now I’m lazy, if you couldn’t already tell. I can’t be bothered to write nice commits for things people will never see, so I wrote a <del>horrendous</del> functional script to speed this part up too.</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle exec jekyll build | git add . | git commit -m &quot;new post&quot; | git pull | git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec jekyll build | git add . | git commit -m "new post" | git pull | git push
+</code></pre></div></div>
 
-&lt;p&gt;Here we’re doing a few bits:&lt;/p&gt;
+<p>Here we’re doing a few bits:</p>
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec jekyll build&lt;/code&gt; builds the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.md&lt;/code&gt; files into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.html&lt;/code&gt; files for the posts.&lt;/li&gt;
-  &lt;li&gt;Add all the new files to our repoitory.&lt;/li&gt;
-  &lt;li&gt;Commit them with a very descriptive commit message.&lt;/li&gt;
-  &lt;li&gt;Pull the latest changes in case we did a drunk ramble directly into DevOps (don’t judge me)&lt;/li&gt;
-  &lt;li&gt;Push the changes locally.&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bundle exec jekyll build</code> builds the <code class="language-plaintext highlighter-rouge">.md</code> files into <code class="language-plaintext highlighter-rouge">.html</code> files for the posts.</li>
+  <li>Add all the new files to our repoitory.</li>
+  <li>Commit them with a very descriptive commit message.</li>
+  <li>Pull the latest changes in case we did a drunk ramble directly into DevOps (don’t judge me)</li>
+  <li>Push the changes locally.</li>
+</ul>
 
-&lt;p&gt;I threw that crap into a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ps1&lt;/code&gt; PowerShell script and added it to the root of my blog.&lt;/p&gt;
+<p>I threw that crap into a <code class="language-plaintext highlighter-rouge">.ps1</code> PowerShell script and added it to the root of my blog.</p>
 
-&lt;p&gt;Now, with the combined strength of our scuffed pipeline and horrendous git practices that my professors are definitely weeping at, we can write a new blog post and publish it with just a script. How far technology has come.&lt;/p&gt;
+<p>Now, with the combined strength of our scuffed pipeline and horrendous git practices that my professors are definitely weeping at, we can write a new blog post and publish it with just a script. How far technology has come.</p>
 
-&lt;h1 id=&quot;after-thoughts&quot;&gt;After thoughts&lt;/h1&gt;
+<h1 id="after-thoughts">After thoughts</h1>
 
-&lt;p&gt;I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.&lt;/p&gt;
+<p>I’m aware this is an awful way of ignoring learning proper CI/CD practices. I’ll live with myself. It works, nobody else is writing to this mess of a blog and I frankly don’t care about best practices for a micro-project.</p>
 
-&lt;p&gt;Enjoy!&lt;/p&gt;</content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html">Introduction</summary></entry></feed>
+<p>Enjoy!</p>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="jekyll" /><category term="azure devops" /><summary type="html"><![CDATA[Introduction]]></summary></entry></feed>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://jamesgould.dev/posts/sinning-via-azure-devops/</loc>
+<loc>http://localhost:4000/posts/sinning-via-azure-devops/</loc>
 <lastmod>2022-01-28T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://jamesgould.dev/posts/easy-azure-static-webapp-blog/</loc>
+<loc>http://localhost:4000/posts/easy-azure-static-webapp-blog/</loc>
 <lastmod>2022-02-04T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://jamesgould.dev/posts/NET-Aspire-Integration-Testing-Troubleshooting/</loc>
+<loc>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/</loc>
 <lastmod>2025-03-16T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://jamesgould.dev/</loc>
+<loc>http://localhost:4000/</loc>
 </url>
 </urlset>
