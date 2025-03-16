@@ -18,14 +18,14 @@
   color: #ffffff;
 } /* Generic */
 .highlight .k {
-  color: #fb660a;
+  color: #D8A0DF;
   font-weight: bold;
 } /* Keyword */
 .highlight .l {
   color: #ffffff;
 } /* Literal */
 .highlight .n {
-  color: #ffffff;
+  color: #B8D7A3;
 } /* Name */
 .highlight .o {
   color: #ffffff;
@@ -110,7 +110,7 @@
   font-weight: bold;
 } /* Keyword.Reserved */
 .highlight .kt {
-  color: #cdcaa9;
+  color: #9CDCFE;
   font-weight: bold;
 } /* Keyword.Type */
 .highlight .ld {
@@ -131,7 +131,7 @@
   color: #ffffff;
 } /* Name.Builtin */
 .highlight .nc {
-  color: #ffffff;
+  color: #4EC9B0;
 } /* Name.Class */
 .highlight .no {
   color: #0086d2;
