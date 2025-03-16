@@ -54,7 +54,7 @@ Annoying, but not a hill worth dying on. I migrated the models out of the `API` 
 
 The really key part here is the `IsAspireProjectResource="false"` which allows you to reference items from within that project like you would a normal project reference:
 
-```
+```csharp
 namespace AzureKeyVaultEmulator.Shared.Constants
 {
     public class AspireConstants
@@ -88,7 +88,7 @@ Again, reusability! It's important - and this is why the MS documentation kind o
 
 Create a basic, minimal `Fixture` inside of your `IntegrationTesting` project (ideally in a suitably named folder):
 
-```
+```csharp
 public sealed class TestingFixture : IAsyncLifetime
 {
     private DistributedApplication? _app;
@@ -131,7 +131,7 @@ Unless we hardcode the `port` we need to look this up. The Microsoft docs tell y
 
 Let's create, and expose, a `HttpClient` from our `Fixture` by extending its' functionality:
 
-```
+```csharp
 private HttpClient? _testingClient; // Placed below _notificationService
 
 public async Task<HttpClient> CreateHttpClient(string applicationName = AspireConstants.EmulatorServiceName)
@@ -159,7 +159,7 @@ Okay, finally, we can start writing tests in a way that is easy to maintain.
 
 First off create a new `TestClass` for a particular `Controller`, `Endpoint`, whatever you want to test:
 
-```
+```csharp
 public class GetSecretTests(TestingFixture fixture) : IClassFixture<TestingFixture>
 {
 
@@ -172,7 +172,7 @@ We're using the new [Primary Constructor](https://learn.microsoft.com/en-us/dotn
 
 Now let's add a test and call into our API:
 
-```
+```csharp
 [Fact]
 public async Task GetSecretsBlocksRequestWithoutBearerTokenTest()
 {
@@ -188,7 +188,7 @@ As you can see the `TestingFixture` allows us to create a bog-standard `HttpClie
 
 Remember the point I made about migrating API models to a `Shared` project earlier? If you need to go further into validating the response, ie checking a field has been set correctly, you can do so like you would consuming a 3rd party API:
 
-```
+```csharp
 [Fact]
 public async Task GetSecretsReturnsBackCorrectValueTest()
 {
@@ -208,14 +208,14 @@ And that's it! Now you have a fully reusable `Fixture` and a set up integration 
 
 If you're using a versioned API, and don't want to repeat yourself endlessly (reusabili- okay I'll stop) you can modify the `CreateHttpClient` method in your `Fixture` to do that for you. I'm using the following:
 
-```
+```csharp
 <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
 <PackageReference Include="Asp.Versioning.Http.Client" Version="8.1.0" />
 ```
 
 And implementing them like so:
 
-```
+```csharp
 private HttpClient? _testingClient;
 
 public async Task<HttpClient> CreateHttpClient(double version, string applicationName = AspireConstants.EmulatorServiceName)
@@ -243,7 +243,7 @@ public async Task<HttpClient> CreateHttpClient(double version, string applicatio
 
 And then configure your tests to alter the API version like so:
 
-```
+```csharp
 [Theory]
 [InlineData(1.0)]
 [InlineData(1.1)]
