@@ -91,7 +91,6 @@ namespace AzureKeyVaultEmulator.IntegrationTests.SetupHelper
 and another example of a method block with various keywords:
 
 ```csharp
-```csharp
 public sealed class TestingFixture : IAsyncLifetime
 {
     private DistributedApplication? _app;
