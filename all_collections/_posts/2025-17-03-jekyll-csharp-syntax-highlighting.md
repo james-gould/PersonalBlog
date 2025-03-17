@@ -9,11 +9,11 @@ Syntax highlighting is hard but luckily Jekyll makes use of Liquid Tags and Roug
 
 One of the cool things is I can write pure markdown for these blog posts, append a language option to the triple backticks and set the highlighting:
 
+~~~
+```csharp
+// Code here
 ```
-    ```csharp
-    // Code here
-    ```
-```
+~~~
 
 The only issue is that the defaults look terrible:
 
