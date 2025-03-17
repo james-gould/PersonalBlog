@@ -44,7 +44,7 @@ This will allow your new `IntegrationTesting` project to run the `AppHost` proje
 
 # Shared/reference projects
 
-One of the nuances of `.NET Aspire` is any projects referenced as classed as `executables` - meaning if you need a `Model` from your API to create an integration test from it cannot exist in the same project as your API.
+One of the nuances of `.NET Aspire` is any projects referenced are classed as `executables` - meaning if you need a `Model` from your API to create an integration test from it cannot exist in the same project as your API.
 
 Annoying, but not a hill worth dying on. I migrated the models out of the `API` project and into a `Shared` project, and referenced it as such:
 
