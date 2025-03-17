@@ -1,6 +1,6 @@
 ---
 layout: post
-title: .NET Aspire Integration Testing Quick Start
+title: Syntax Highlighting C# on a Jekyll Blog
 date: 2025-03-16
 categories: ["csharp", "jekyll"]
 ---
