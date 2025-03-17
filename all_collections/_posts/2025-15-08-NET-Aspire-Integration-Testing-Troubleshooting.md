@@ -166,7 +166,7 @@ public class GetSecretTests(TestingFixture fixture) : IClassFixture<TestingFixtu
 }
 ```
 
-The `IClassFixture<TestingFixture>` tells our class that we're an testing class, and exposes the `TestingFixture` to it.
+The `IClassFixture<TestingFixture>` tells our class that we're a testing class specifically, and exposes the `TestingFixture` to it.
 
 We're using the new [Primary Constructor](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/primary-constructors) syntax - which my eyes/brain still haven't gotten used to. 
 
