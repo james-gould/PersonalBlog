@@ -19,7 +19,7 @@ I've now built a true, fairly fast CI/CD pipeline to build and release this blog
 
 In case you just want the `YAML` and nothing else, here it is:
 
-```
+```yaml
 trigger:
 - master
 
@@ -62,7 +62,7 @@ steps:
 
 Let's jump into the nitty-gritty of what this build config is doing, and why.
 
-```
+```yaml
 schedules:
 - cron: "5 0 * * *"
   displayName: Daily release for scheduled posts
@@ -76,7 +76,7 @@ This is an optional include that will build the blog on a schedule, with the cro
 
 If you don't want to schedule a build and simply want to trigger the release when you publish a new post, delete this section.
 
-```
+```yaml
 steps:
 - task: UseRubyVersion@0
   inputs:
@@ -113,7 +113,7 @@ The `--job=4` is the key part here. Without it, we run the process on a single c
 
 # The boring stuff
 
-```
+```yaml
 - task: CmdLine@2
   inputs:
     script: bundle exec jekyll build
@@ -122,7 +122,7 @@ The `--job=4` is the key part here. Without it, we run the process on a single c
 
 Now that we've gotten our ducks firmly in a row it's time to build out `xxx.md` files into actual HTML. This is a simple command-line script which runs `bundle exec jekyll build`. Only takes about 1s, no point trying to optimise it.
 
-```
+```yaml
 - task: AzureStaticWebApp@0
   inputs:
       app_location: '/_site'
