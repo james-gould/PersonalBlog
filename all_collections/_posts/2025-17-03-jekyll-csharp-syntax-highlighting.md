@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Syntax Highlighting C# on a Jekyll Blog
-date: 2025-03-16
+date: 2025-03-17
 categories: ["csharp", "jekyll"]
 ---
 
