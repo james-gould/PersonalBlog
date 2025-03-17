@@ -206,7 +206,7 @@ And that's it! Now you have a fully reusable `Fixture` and a set up integration 
 
 # Final notes 
 
-If you're using a versioned API, and don't want to repeat yourself endlessly (reusabili- okay I'll stop) you can modify the `CreateHttpClient` method in your `Fixture` to do that for you. I'm using the following:
+If you're using a versioned API and don't want to repeat yourself endlessly (reusabili- okay I'll stop) you can modify the `CreateHttpClient` method in your `Fixture` to do that for you. I'm using the following:
 
 ```csharp
 <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
