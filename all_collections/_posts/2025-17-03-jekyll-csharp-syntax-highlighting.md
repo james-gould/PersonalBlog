@@ -27,7 +27,7 @@ I tried a whole heap of solutions to get this working in a nice way, including b
 
 - Writing my own Ruby plugin to render differently
 - Manually tweaking the `syntax.css` file I use for highlighting
-- Installing *blood Rust* to try and make use of [kramdown Tree Sitter](https://tree-sitter.github.io/tree-sitter/)
+- Installing *bloody Rust* to try and make use of [kramdown Tree Sitter](https://tree-sitter.github.io/tree-sitter/)
 - Giving up and going to bed.
 
 None of these actually came out looking anything close to what Visual Studio shows you, which is mostly a limitation of the [Rouge CSharp lexer](https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/lexers/csharp.rb).
