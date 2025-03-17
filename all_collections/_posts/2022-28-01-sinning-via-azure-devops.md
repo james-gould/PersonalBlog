@@ -46,7 +46,7 @@ For this *pragmatic* guide we need to commit our first crime: remove the exclusi
 
 Here's the dreadful YAML file to use for publishing a single post. It's not pretty, but it works. All in the name of getting it working without too much glitter:
 
-```
+```yaml
 trigger:
   - master
 

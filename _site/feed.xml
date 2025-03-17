@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-17T10:36:24+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-17T11:55:21+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
 <p>One of my main gripes with Microsoft is their documentation. If you’re starting something from scratch you’ll naturally Google around for it, find the docs and the example code looks super simple; then you get into the nitty gritty and suddenly you’re riding solo.</p>
 
@@ -250,7 +250,7 @@
 
 <p>Honestly couldn’t make it up.</p>
 
-<p>Thanks for reading!</p>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term=".NET 8" /><category term=".NET Aspire" /><category term="integration testing" /><category term="C#" /><summary type="html"><![CDATA[Introduction]]></summary></entry><entry><title type="html">Fast Static Jekyll Blog Deployment with Azure CI/CD</title><link href="http://localhost:4000/posts/easy-azure-static-webapp-blog/" rel="alternate" type="text/html" title="Fast Static Jekyll Blog Deployment with Azure CI/CD" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>http://localhost:4000/posts/easy-azure-static-webapp-blog</id><content type="html" xml:base="http://localhost:4000/posts/easy-azure-static-webapp-blog/"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>Thanks for reading!</p>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="dotnet 8" /><category term="dotnet Aspire" /><category term="integration testing" /><category term="csharp" /><summary type="html"><![CDATA[Introduction]]></summary></entry><entry><title type="html">Fast Static Jekyll Blog Deployment with Azure CI/CD</title><link href="http://localhost:4000/posts/easy-azure-static-webapp-blog/" rel="alternate" type="text/html" title="Fast Static Jekyll Blog Deployment with Azure CI/CD" /><published>2022-02-04T00:00:00+00:00</published><updated>2022-02-04T00:00:00+00:00</updated><id>http://localhost:4000/posts/easy-azure-static-webapp-blog</id><content type="html" xml:base="http://localhost:4000/posts/easy-azure-static-webapp-blog/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
 <p>A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.</p>
 
@@ -264,41 +264,41 @@
 
 <p>In case you just want the <code class="language-plaintext highlighter-rouge">YAML</code> and nothing else, here it is:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trigger:
-- master
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trigger</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">master</span>
 
-pool:
-  vmImage: 'ubuntu-latest'
+<span class="na">pool</span><span class="pi">:</span>
+  <span class="na">vmImage</span><span class="pi">:</span> <span class="s1">'</span><span class="s">ubuntu-latest'</span>
 
-schedules:
-- cron: "5 0 * * *"
-  displayName: Daily release for scheduled posts
-  branches:
-    include: 
-     - master
-  always: true 
+<span class="na">schedules</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">cron</span><span class="pi">:</span> <span class="s2">"</span><span class="s">5</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span>
+  <span class="na">displayName</span><span class="pi">:</span> <span class="s">Daily release for scheduled posts</span>
+  <span class="na">branches</span><span class="pi">:</span>
+    <span class="na">include</span><span class="pi">:</span> 
+     <span class="pi">-</span> <span class="s">master</span>
+  <span class="na">always</span><span class="pi">:</span> <span class="kc">true</span> 
 
-steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '&gt;= 2.5'
+<span class="na">steps</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">UseRubyVersion@0</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+    <span class="na">versionSpec</span><span class="pi">:</span> <span class="s1">'</span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">2.5'</span>
 
-- script: |
-    gem install jekyll bundler --no-rdoc
-    bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
+<span class="pi">-</span> <span class="na">script</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">gem install jekyll bundler --no-rdoc</span>
+    <span class="s">bundle install --retry=3 --jobs=4</span>
+  <span class="na">displayName</span><span class="pi">:</span> <span class="s1">'</span><span class="s">bundle</span><span class="nv"> </span><span class="s">install'</span>
 
-- task: CmdLine@2
-  inputs:
-    script: bundle exec jekyll build
-    displayName: 'Jekyll Build'
+<span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">CmdLine@2</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+    <span class="na">script</span><span class="pi">:</span> <span class="s">bundle exec jekyll build</span>
+    <span class="na">displayName</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Jekyll</span><span class="nv"> </span><span class="s">Build'</span>
     
-- task: AzureStaticWebApp@0
-  inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
-      azure_static_web_apps_api_token: $(deployment_token)
+<span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">AzureStaticWebApp@0</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+      <span class="na">app_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">api_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">api'</span>
+      <span class="na">output_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">azure_static_web_apps_api_token</span><span class="pi">:</span> <span class="s">$(deployment_token)</span>
 
 </code></pre></div></div>
 
@@ -306,28 +306,28 @@ steps:
 
 <p>Let’s jump into the nitty-gritty of what this build config is doing, and why.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>schedules:
-- cron: "5 0 * * *"
-  displayName: Daily release for scheduled posts
-  branches:
-    include: 
-     - master
-  always: true 
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">schedules</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">cron</span><span class="pi">:</span> <span class="s2">"</span><span class="s">5</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span>
+  <span class="na">displayName</span><span class="pi">:</span> <span class="s">Daily release for scheduled posts</span>
+  <span class="na">branches</span><span class="pi">:</span>
+    <span class="na">include</span><span class="pi">:</span> 
+     <span class="pi">-</span> <span class="s">master</span>
+  <span class="na">always</span><span class="pi">:</span> <span class="kc">true</span> 
 </code></pre></div></div>
 
 <p>This is an optional include that will build the blog on a schedule, with the cron being every day at 00:05am. This is so I can schedule posts into the <code class="language-plaintext highlighter-rouge">all_collections/_posts</code> directory and have them release on the date of the post.</p>
 
 <p>If you don’t want to schedule a build and simply want to trigger the release when you publish a new post, delete this section.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '&gt;= 2.5'
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">steps</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">UseRubyVersion@0</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+    <span class="na">versionSpec</span><span class="pi">:</span> <span class="s1">'</span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">2.5'</span>
 
-- script: |
-    gem install jekyll bundler --no-rdoc
-    bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
+<span class="pi">-</span> <span class="na">script</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">gem install jekyll bundler --no-rdoc</span>
+    <span class="s">bundle install --retry=3 --jobs=4</span>
+  <span class="na">displayName</span><span class="pi">:</span> <span class="s1">'</span><span class="s">bundle</span><span class="nv"> </span><span class="s">install'</span>
 </code></pre></div></div>
 
 <p>This is a 2 step part which has been the majority of the time sink I’ve experienced.</p>
@@ -357,20 +357,20 @@ steps:
 
 <h1 id="the-boring-stuff">The boring stuff</h1>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- task: CmdLine@2
-  inputs:
-    script: bundle exec jekyll build
-    displayName: 'Jekyll Build'
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">CmdLine@2</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+    <span class="na">script</span><span class="pi">:</span> <span class="s">bundle exec jekyll build</span>
+    <span class="na">displayName</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Jekyll</span><span class="nv"> </span><span class="s">Build'</span>
 </code></pre></div></div>
 
 <p>Now that we’ve gotten our ducks firmly in a row it’s time to build out <code class="language-plaintext highlighter-rouge">xxx.md</code> files into actual HTML. This is a simple command-line script which runs <code class="language-plaintext highlighter-rouge">bundle exec jekyll build</code>. Only takes about 1s, no point trying to optimise it.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- task: AzureStaticWebApp@0
-  inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
-      azure_static_web_apps_api_token: $(deployment_token)
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">AzureStaticWebApp@0</span>
+  <span class="na">inputs</span><span class="pi">:</span>
+      <span class="na">app_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">api_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">api'</span>
+      <span class="na">output_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">azure_static_web_apps_api_token</span><span class="pi">:</span> <span class="s">$(deployment_token)</span>
 </code></pre></div></div>
 
 <p>At this point we’ve done all the required steps and we’re ready to publish out to our Azure Static Web App. We have a <code class="language-plaintext highlighter-rouge">pipeline variable</code> set called <code class="language-plaintext highlighter-rouge">deployment_token</code> which you can grab from the configuration blade of your Static Web App (detailed explanation on the previous post linked above).</p>
@@ -424,21 +424,21 @@ steps:
 
 <p>Here’s the dreadful YAML file to use for publishing a single post. It’s not pretty, but it works. All in the name of getting it working without too much glitter:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trigger:
-  - master
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trigger</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">master</span>
 
-pool:
-  vmImage: ubuntu-latest
+<span class="na">pool</span><span class="pi">:</span>
+  <span class="na">vmImage</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
 
-steps:
-  - checkout: self
-    submodules: true
-  - task: AzureStaticWebApp@0
-    inputs:
-      app_location: '/_site'
-      api_location: 'api'
-      output_location: '/_site'
-      azure_static_web_apps_api_token: $(deployment_token)
+<span class="na">steps</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">checkout</span><span class="pi">:</span> <span class="s">self</span>
+    <span class="na">submodules</span><span class="pi">:</span> <span class="kc">true</span>
+  <span class="pi">-</span> <span class="na">task</span><span class="pi">:</span> <span class="s">AzureStaticWebApp@0</span>
+    <span class="na">inputs</span><span class="pi">:</span>
+      <span class="na">app_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">api_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">api'</span>
+      <span class="na">output_location</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/_site'</span>
+      <span class="na">azure_static_web_apps_api_token</span><span class="pi">:</span> <span class="s">$(deployment_token)</span>
 
 </code></pre></div></div>
 
