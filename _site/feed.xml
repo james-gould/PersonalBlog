@@ -1,4 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-17T11:55:21+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-17T12:42:49+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">Syntax Highlighting C# on a Jekyll Blog</title><link href="http://localhost:4000/posts/jekyll-csharp-syntax-highlighting/" rel="alternate" type="text/html" title="Syntax Highlighting C# on a Jekyll Blog" /><published>2025-03-17T00:00:00+00:00</published><updated>2025-03-17T00:00:00+00:00</updated><id>http://localhost:4000/posts/jekyll-csharp-syntax-highlighting</id><content type="html" xml:base="http://localhost:4000/posts/jekyll-csharp-syntax-highlighting/"><![CDATA[<p>Syntax highlighting is hard but luckily Jekyll makes use of Liquid Tags and Rouge to simplify it for you.</p>
+
+<p>One of the cool things is I can write pure markdown for these blog posts, append a language option to the triple backticks and set the highlighting:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ```csharp
+    // Code here
+    ```
+</code></pre></div></div>
+
+<p>The only issue is that the defaults look terrible:</p>
+
+<p><img src="https://i.imgur.com/bGEDMur.png" alt="default jekyll syntax highlighting for C#" /></p>
+
+<p>So let’s fix that.</p>
+
+<h1 id="other-solutions">Other solutions</h1>
+
+<p>I tried a whole heap of solutions to get this working in a nice way, including but not limited to:</p>
+
+<ul>
+  <li>Writing my own Ruby plugin to render differently</li>
+  <li>Manually tweaking the <code class="language-plaintext highlighter-rouge">syntax.css</code> file I use for highlighting</li>
+  <li>Installing <em>bloody Rust</em> to try and make use of <a href="https://tree-sitter.github.io/tree-sitter/">kramdown Tree Sitter</a></li>
+  <li>Giving up and going to bed.</li>
+</ul>
+
+<p>None of these actually came out looking anything close to what Visual Studio shows you, which is mostly a limitation of the <a href="https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/lexers/csharp.rb">Rouge CSharp lexer</a>.</p>
+
+<p>I don’t, and won’t, complain about people providing solutions to problems for free in the open source world. I can’t thank people <em>enough</em> for doing it because the modern internet wouldn’t be the same without it.</p>
+
+<p>That said, it didn’t work for me. Time to fix it.</p>
+
+<h1 id="the-final-solution">The final solution</h1>
+
+<p>I relented and asked ChatGPT what I should do in this situation who presented The Chosen One™:</p>
+
+<p>We’re going to be making use of <a href="">Prism.js</a> instead, which looks significantly better. In a common <code class="language-plaintext highlighter-rouge">.html</code> file for your blog include the following:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="c">&lt;!--language support--&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>Next find a good theme that you like <a href="https://github.com/PrismJS/prism-themes?tab=readme-ov-file#available-themes">here</a>. I personally chose <a href="https://github.com/PrismJS/prism-themes/blob/master/themes/prism-vsc-dark-plus.css">VS Code Dark</a>.</p>
+
+<p>Download that css and place it into a <code class="language-plaintext highlighter-rouge">.css</code> file inside your <code class="language-plaintext highlighter-rouge">assets/css</code> folder. Reference the new <code class="language-plaintext highlighter-rouge">css</code> file in your common file above like so:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/assets/css/prismjs-vs.css"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>And finally, in a file exclusively used by your <code class="language-plaintext highlighter-rouge">posts</code>, add this to the bottom of the file <strong>before</strong> the <code class="language-plaintext highlighter-rouge">&lt;/html&gt;</code> tag:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">DOMContentLoaded</span><span class="dl">"</span><span class="p">,</span> <span class="nf">function </span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Prism</span><span class="p">.</span><span class="nf">highlightAll</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>and there we go! Here’s the newly highlighted code above, but looking as close as I could possibly get it to Visual Studio:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.Shared.Constants</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">AspireConstants</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">EmulatorServiceName</span> <span class="p">=</span> <span class="s">"keyVaultEmulatorApi"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.IntegrationTests.SetupHelper</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ExampleReference</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">referencedString</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>and another example of a method block with various keywords:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">TestingFixture</span> <span class="p">:</span> <span class="n">IAsyncLifetime</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">DistributedApplication</span><span class="p">?</span> <span class="n">_app</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">ResourceNotificationService</span><span class="p">?</span> <span class="n">_notificationService</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">InitializeAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="k">await</span> <span class="n">DistributedApplicationTestingBuilder</span><span class="p">.</span><span class="n">CreateAsync</span><span class="p">&lt;</span><span class="n">Projects</span><span class="p">.</span><span class="n">AzureKeyVaultEmulator_AppHost</span><span class="p">&gt;();</span>
+
+        <span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="nf">ConfigureHttpClientDefaults</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">c</span><span class="p">.</span><span class="nf">AddStandardResilienceHandler</span><span class="p">();</span>
+        <span class="p">});</span>
+
+        <span class="n">_app</span> <span class="p">=</span> <span class="k">await</span> <span class="n">builder</span><span class="p">.</span><span class="nf">BuildAsync</span><span class="p">();</span>
+
+        <span class="n">_notificationService</span> <span class="p">=</span> <span class="n">_app</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">GetService</span><span class="p">&lt;</span><span class="n">ResourceNotificationService</span><span class="p">&gt;();</span>
+
+        <span class="k">await</span> <span class="n">_app</span><span class="p">.</span><span class="nf">StartAsync</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">DisposeAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_app</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">_app</span><span class="p">.</span><span class="nf">DisposeAsync</span><span class="p">().</span><span class="nf">ConfigureAwait</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><category term="csharp" /><category term="jekyll" /><summary type="html"><![CDATA[Syntax highlighting is hard but luckily Jekyll makes use of Liquid Tags and Rouge to simplify it for you.]]></summary></entry><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
 <p>One of my main gripes with Microsoft is their documentation. If you’re starting something from scratch you’ll naturally Google around for it, find the docs and the example code looks super simple; then you get into the nitty gritty and suddenly you’re riding solo.</p>
 
