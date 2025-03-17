@@ -29,7 +29,7 @@ We'll be creating a new `.NET Aspire XUnit Project` from Visual Studio:
 
 Once you've got the naming done correctly and project settings configured from the wizard, the following item is *missing* from the template that causes it to entirely break:
 
-```
+```xml
 <!-- Include in your top level <PropertyGroup> -->
 <PreserveCompilationContext>true</PreserveCompilationContext>
 ```
@@ -44,7 +44,7 @@ This will allow your new `IntegrationTesting` project to run the `AppHost` proje
 
 # Shared/reference projects
 
-Once of the nuances of `.NET Aspire` is any projects referenced as classed as `executables` - meaning if you need a `Model` from your API to create an integration test from it cannot exist in the same project as your API.
+One of the nuances of `.NET Aspire` is any projects referenced as classed as `executables` - meaning if you need a `Model` from your API to create an integration test from it cannot exist in the same project as your API.
 
 Annoying, but not a hill worth dying on. I migrated the models out of the `API` project and into a `Shared` project, and referenced it as such:
 
