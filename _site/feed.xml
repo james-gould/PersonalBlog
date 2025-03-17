@@ -1,20 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-16T18:39:33+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
-
-<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.Shared.Constants</span>
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">class</span> <span class="nc">AspireConstants</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">EmulatorServiceName</span> <span class="p">=</span> <span class="s">"keyVaultEmulatorApi"</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.IntegrationTests.SetupHelper</span>
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ExampleReference</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">referencedString</span> <span class="p">=</span> <span class="n">AspireConstants</span><span class="p">.</span><span class="n">EmulatorServiceName</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></figure>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-03-17T10:36:24+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Practical .NET</title><author><name>James Gould</name><email>contact@jamesgould.dev</email></author><entry><title type="html">.NET Aspire Integration Testing Quick Start</title><link href="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/" rel="alternate" type="text/html" title=".NET Aspire Integration Testing Quick Start" /><published>2025-03-16T00:00:00+00:00</published><updated>2025-03-16T00:00:00+00:00</updated><id>http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting</id><content type="html" xml:base="http://localhost:4000/posts/NET-Aspire-Integration-Testing-Troubleshooting/"><![CDATA[<h1 id="introduction">Introduction</h1>
 
 <p>One of my main gripes with Microsoft is their documentation. If you’re starting something from scratch you’ll naturally Google around for it, find the docs and the example code looks super simple; then you get into the nitty gritty and suddenly you’re riding solo.</p>
 
@@ -38,8 +22,8 @@
 
 <p>Once you’ve got the naming done correctly and project settings configured from the wizard, the following item is <em>missing</em> from the template that causes it to entirely break:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- Include in your top level &lt;PropertyGroup&gt; --&gt;
-&lt;PreserveCompilationContext&gt;true&lt;/PreserveCompilationContext&gt;
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Include in your top level &lt;PropertyGroup&gt; --&gt;</span>
+<span class="nt">&lt;PreserveCompilationContext&gt;</span>true<span class="nt">&lt;/PreserveCompilationContext&gt;</span>
 </code></pre></div></div>
 
 <p>There you go, I’ve just saved you 2 hours of Googling on a lovely Saturday afternoon.</p>
@@ -52,14 +36,14 @@
 
 <h1 id="sharedreference-projects">Shared/reference projects</h1>
 
-<p>Once of the nuances of <code class="language-plaintext highlighter-rouge">.NET Aspire</code> is any projects referenced as classed as <code class="language-plaintext highlighter-rouge">executables</code> - meaning if you need a <code class="language-plaintext highlighter-rouge">Model</code> from your API to create an integration test from it cannot exist in the same project as your API.</p>
+<p>One of the nuances of <code class="language-plaintext highlighter-rouge">.NET Aspire</code> is any projects referenced are classed as <code class="language-plaintext highlighter-rouge">executables</code> - meaning if you need a <code class="language-plaintext highlighter-rouge">Model</code> from your API to create an integration test from it cannot exist in the same project as your API.</p>
 
 <p>Annoying, but not a hill worth dying on. I migrated the models out of the <code class="language-plaintext highlighter-rouge">API</code> project and into a <code class="language-plaintext highlighter-rouge">Shared</code> project, and referenced it as such:</p>
 
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">ProjectReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj"</span> <span class="n">IsAspireProjectResource</span><span class="p">=</span><span class="s">"false"</span><span class="p">/&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ProjectReference</span> <span class="na">Include=</span><span class="s">"..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj"</span> <span class="na">IsAspireProjectResource=</span><span class="s">"false"</span><span class="nt">/&gt;</span>
 </code></pre></div></div>
 
-<p>The really key part here is the <code class="language-plaintext highlighter-rouge">IsAspireProjectResource="false"</code> which allows you to reference items from within that project like you would a normal project reference:</p>
+<p>The really key part here is the <code class="language-plaintext highlighter-rouge">IsAspireProjectResource="false"</code> which allows you to reference items from within that project like you would a normal project reference. For example:</p>
 
 <div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">AzureKeyVaultEmulator.Shared.Constants</span>
 <span class="p">{</span>
@@ -152,7 +136,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>We’re now using the <code class="language-plaintext highlighter-rouge">CreateHttpClient("MyApiProject")</code> method which under the hood uses <code class="language-plaintext highlighter-rouge">IHttpClientFactory</code> <a href="https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs">as you can see here</a>. No need to worry about hardcoding the IP and Port for your application, delegate the work to <code class="language-plaintext highlighter-rouge">.NET Aspire</code>.</p>
+<p>We’re now using the <code class="language-plaintext highlighter-rouge">CreateHttpClient("MyApiProject")</code> method which under the hood uses <code class="language-plaintext highlighter-rouge">IHttpClientFactory</code> <a href="https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs#L23-L34">as you can see here</a>. No need to worry about hardcoding the IP and Port for your application, delegate the work to <code class="language-plaintext highlighter-rouge">.NET Aspire</code>.</p>
 
 <p>Next we’re making use of our <code class="language-plaintext highlighter-rouge">ResourceNotificationService</code> to wait for the API to be alive. This is near-instant once the <code class="language-plaintext highlighter-rouge">AppHost</code> has launched but extremely useful if you have a slow start-up (such as waiting for a database server).</p>
 
@@ -170,7 +154,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The <code class="language-plaintext highlighter-rouge">IClassFixture&lt;TestingFixture&gt;</code> tells our class that we’re an testing class, and exposes the <code class="language-plaintext highlighter-rouge">TestingFixture</code> to it.</p>
+<p>The <code class="language-plaintext highlighter-rouge">IClassFixture&lt;TestingFixture&gt;</code> tells our class that we’re a testing class specifically, and exposes the <code class="language-plaintext highlighter-rouge">TestingFixture</code> to it.</p>
 
 <p>We’re using the new <a href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/primary-constructors">Primary Constructor</a> syntax - which my eyes/brain still haven’t gotten used to.</p>
 
@@ -208,10 +192,10 @@
 
 <h1 id="final-notes">Final notes</h1>
 
-<p>If you’re using a versioned API, and don’t want to repeat yourself endlessly (reusabili- okay I’ll stop) you can modify the <code class="language-plaintext highlighter-rouge">CreateHttpClient</code> method in your <code class="language-plaintext highlighter-rouge">Fixture</code> to do that for you. I’m using the following:</p>
+<p>If you’re using a versioned API and don’t want to repeat yourself endlessly (reusabili- okay I’ll stop) you can modify the <code class="language-plaintext highlighter-rouge">CreateHttpClient</code> method in your <code class="language-plaintext highlighter-rouge">Fixture</code> to do that for you. I’m using the following:</p>
 
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">PackageReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"Asp.Versioning.Http"</span> <span class="n">Version</span><span class="p">=</span><span class="s">"8.1.0"</span> <span class="p">/&gt;</span>
-<span class="p">&lt;</span><span class="n">PackageReference</span> <span class="n">Include</span><span class="p">=</span><span class="s">"Asp.Versioning.Http.Client"</span> <span class="n">Version</span><span class="p">=</span><span class="s">"8.1.0"</span> <span class="p">/&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;PackageReference</span> <span class="na">Include=</span><span class="s">"Asp.Versioning.Http"</span> <span class="na">Version=</span><span class="s">"8.1.0"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;PackageReference</span> <span class="na">Include=</span><span class="s">"Asp.Versioning.Http.Client"</span> <span class="na">Version=</span><span class="s">"8.1.0"</span> <span class="nt">/&gt;</span>
 </code></pre></div></div>
 
 <p>And implementing them like so:</p>
@@ -270,7 +254,7 @@
 
 <p>A few days prior, when I set this blog up, I wanted to shortcut a lot of the legwork with setting up a proper CI/CD pipeline to build and release out to an Azure Static Web App.</p>
 
-<p>If you’re a fan of horror stories feel free to read my <a href="https://jamesgould.dev/posts/scuffed-publish/">initial attempt here</a>.</p>
+<p>If you’re a fan of horror stories feel free to read my <a href="https://jamesgould.dev/posts/sinning-via-azure-devops/">initial attempt here</a>.</p>
 
 <p>Some future requirements have come up which meant that I not only needed a proper <em>build</em> pipeline, but also a fast one.</p>
 

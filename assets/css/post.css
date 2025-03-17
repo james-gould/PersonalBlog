@@ -162,8 +162,6 @@ main {
 }
 
 /* pre , code */
-.content,
-.content div,
 .content div pre,
 .content div pre code {
   overflow-x: auto !important;

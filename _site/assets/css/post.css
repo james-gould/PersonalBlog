@@ -45,8 +45,8 @@ header {
 }
 main {
   margin: 0 auto;
-  max-width: 850px;
-  padding: 3rem 0 4rem 0;
+  max-width: 1500px;
+  padding: 3rem 2rem 4rem 2rem;
 }
 .article {
   margin-bottom: 3rem;
@@ -162,8 +162,6 @@ main {
 }
 
 /* pre , code */
-.content,
-.content div,
 .content div pre,
 .content div pre code {
   overflow-x: auto !important;
