@@ -48,11 +48,11 @@ One of the nuances of `.NET Aspire` is any projects referenced are classed as `e
 
 Annoying, but not a hill worth dying on. I migrated the models out of the `API` project and into a `Shared` project, and referenced it as such:
 
-```csharp
+```xml
 <ProjectReference Include="..\AzureKeyVaultEmulator.Shared\AzureKeyVaultEmulator.Shared.csproj" IsAspireProjectResource="false"/>
 ```
 
-The really key part here is the `IsAspireProjectResource="false"` which allows you to reference items from within that project like you would a normal project reference:
+The really key part here is the `IsAspireProjectResource="false"` which allows you to reference items from within that project like you would a normal project reference. For example:
 
 ```cs
 namespace AzureKeyVaultEmulator.Shared.Constants
