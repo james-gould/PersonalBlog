@@ -147,7 +147,7 @@ public async Task<HttpClient> CreateHttpClient(string applicationName = AspireCo
 }
 ```
 
-We're now using the `CreateHttpClient("MyApiProject")` method which under the hood uses `IHttpClientFactory` [as you can see here](https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs). No need to worry about hardcoding the IP and Port for your application, delegate the work to `.NET Aspire`.
+We're now using the `CreateHttpClient("MyApiProject")` method which under the hood uses `IHttpClientFactory` [as you can see here](https://github.com/dotnet/aspire/blob/main/src/Aspire.Hosting.Testing/DistributedApplicationHostingTestingExtensions.cs#L23-L34). No need to worry about hardcoding the IP and Port for your application, delegate the work to `.NET Aspire`.
 
 Next we're making use of our `ResourceNotificationService` to wait for the API to be alive. This is near-instant once the `AppHost` has launched but extremely useful if you have a slow start-up (such as waiting for a database server).
 
