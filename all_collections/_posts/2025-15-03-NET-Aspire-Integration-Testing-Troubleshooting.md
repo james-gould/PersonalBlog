@@ -27,15 +27,6 @@ We'll be creating a new `.NET Aspire XUnit Project` from Visual Studio:
 
 ![.NET Aspire Integration Testing Project using XUnit](https://i.imgur.com/gKXsc5l.png)
 
-Once you've got the naming done correctly and project settings configured from the wizard, the following item is *missing* from the template that causes it to entirely break:
-
-```xml
-<!-- Include in your top level <PropertyGroup> -->
-<PreserveCompilationContext>true</PreserveCompilationContext>
-```
-
-There you go, I've just saved you 2 hours of Googling on a lovely Saturday afternoon. 
-
 Next step is to add a reference to your `AppHost` project in your new `XUnit` project:
 
 ![.Net Aspire Integration Testing AppHost Setup](https://i.imgur.com/PWT3Iby.png)
