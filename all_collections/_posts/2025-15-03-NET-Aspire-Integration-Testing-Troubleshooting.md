@@ -17,10 +17,6 @@ I use XUnit for all my testing purposes (mainly from habit) and .NET Aspire has 
 
 Right? No. Why else would I be writing this?
 
-If you're weird like me you avoid odd number .NET versions. I went from `.NET Core 2.2` to `.NET 6`, now `.NET 8`. I'll be upgrading to `.NET 10` when it comes out too.
-
-This blog post covers setting up integration testing with `.NET 8`. Things may work differently in `.NET 9` - ie something that you need to explicitly delare in `.NET 8` may be implicit in future versions.
-
 # Setting up correctly
 
 We'll be creating a new `.NET Aspire XUnit Project` from Visual Studio:
