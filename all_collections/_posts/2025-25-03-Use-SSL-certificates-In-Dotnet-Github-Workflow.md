@@ -5,9 +5,7 @@ date: 2025-03-17
 categories: ["csharp", "dotnet", "github"]
 ---
 
-I recently began working on the new implementation of the [Azure Keyvault Emulator](https://github.com/james-gould/azure-keyvault-emulator) and created a heap of integration tests.
-
-As part of my build and release process I wanted to run something akin to:
+I recently began working on the new implementation of the [Azure Keyvault Emulator](https://github.com/james-gould/azure-keyvault-emulator) and created a heap of integration tests. As part of my build and release process I wanted to run something akin to:
 
 ```
 dotnet test --verbosity minimal
