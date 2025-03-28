@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Use SSL Certificates in a .NET GitHub Workflow
+title: Using SSL Certificates in a .NET GitHub Workflow
 date: 2025-03-17
 categories: ["csharp", "dotnet", "github"]
 ---
