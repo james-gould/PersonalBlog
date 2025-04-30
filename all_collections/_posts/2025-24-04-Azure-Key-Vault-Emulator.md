@@ -132,7 +132,7 @@ else
 
 My PR into the main `Aspire.Azure.Security.Client` package which adds support for the `KeyClient` and `CertificateClient` is [almost through peer review](https://github.com/dotnet/aspire/pull/8408) and expected to be in the .NET Aspire 9.3 release - until then you'll need to use the usual Azure SDK For .NET if you need those clients.
 
-## The future (and a special thanks)
+## Final remarks
 
 First and foremost I want to thank [Basis Theory](https://github.com/Basis-Theory/azure-keyvault-emulator) for the original repository/codebase of which the Emulator then grew into its' current form. When trying to find a suitable emulator myself I stumbled across it but was sad to see it only supported a few operations and was archived.
 
