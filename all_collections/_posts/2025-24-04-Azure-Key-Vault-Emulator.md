@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Introducing the Azure Key Vault Emulator
-date: 2025-04-24
+date: 2025-04-30
 categories: ["csharp", "dotnet", "github"]
 ---
 
