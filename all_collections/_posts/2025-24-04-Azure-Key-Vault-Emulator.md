@@ -22,17 +22,15 @@ The first stable release of the [Azure Key Vault Emulator](https://github.com/ja
 - **Session or persistent storage of secure data**, meaning you can destroy all secure values when your application is finished running or keep them around if you don't want to run any initialisation code.
 - **No new dependencies** because the emulator is hosted externally to your main application (unless you use the handy `Client` library, more below).
 
-If you use (and like) the Emulator please make sure to ⭐ the repository, this engagement (amongst other criteria) is used to validate project applications for [.NET Foundation membership](https://github.com/dotnet-foundation/projects/issues/441) which will guarantee long term support for the project. Thank you!
+If you use, and like, the Emulator please make sure to ⭐ the repository, this engagement (amongst other criteria) is used to validate project applications for [.NET Foundation membership](https://github.com/dotnet-foundation/projects/issues/441) which will guarantee long term support for the project. Thank you!
 
 ## Getting started With the Emulator
 
-If you want a quickstart guide using `.NET Aspire` [you can read a succinct guide using this documentation](https://github.com/james-gould/azure-keyvault-emulator/tree/development?tab=readme-ov-file#quickstart-net-aspire). 
-
-For those interested in a more granular explanation, the emulator runs as a [container](https://hub.docker.com/r/jamesgoulddev/azure-keyvault-emulator) on your local machine and can be accessed by setting your `VaultUri` to `https://localhost:4997`.
+The emulator runs as a [container](https://hub.docker.com/r/jamesgoulddev/azure-keyvault-emulator) on your local machine and can be accessed by setting your `VaultUri` to `https://localhost:4997`.
 
 It's that easy... but it gets even easier.
 
-If you're using `.NET Aspire` there's now built-in support for the emulator, meaning you can optionally override your  `IResourceBuilder<AzureKeyVaultResource>` to use the emulator
+If you're using `.NET Aspire` there's now built-in support for the emulator, meaning you can optionally override your  `IResourceBuilder<AzureKeyVaultResource>` to use the emulator.
 
 First install the [AzureKeyVaultEmulator.Aspire.Hosting](https://www.nuget.org/packages/AzureKeyVaultEmulator.Aspire.Hosting) package (.NET 8 or 9 only):
 
@@ -79,7 +77,7 @@ var secretClient = new SecretClient(vaultUri, new DefaultAzureCredential(), opti
 var secret = await secretClient.GetSecretAsync("myPassword");
 ```
 
-To take this even easier the [AzureKeyVaultEmulator.Client](https://www.nuget.org/packages/AzureKeyVaultEmulator.Client) library is also available (netstandard2.0):
+To make this even easier the [AzureKeyVaultEmulator.Client](https://www.nuget.org/packages/AzureKeyVaultEmulator.Client) library is also available (netstandard2.0):
 
 ```cs
 // Injected by Aspire using the name "keyvault".
@@ -96,7 +94,7 @@ You can also optionally inject a `KeyClient` and `CertificateClient` like so:
 builder.Services.AddAzureKeyVaultEmulator(vaultUri, secrets: true, keys: true, certificates: false);
 ```
 
-Now you can create your application using Azure Key Vault as normal, using the Azure clients you injected at runtime:
+Now you can create your application as normal, using the Azure Key Vault clients you injected at runtime:
 
 ```cs
 private SecretClient _secretClient;
@@ -142,11 +140,11 @@ Prior to the stable release I got in touch with them to make sure that they were
 
 Now, the future.
 
-The Open Source .NET landscape has changed recently with largely adopted packages opting to move towards a commercial license for future updates, with prior releases keeping their OSS license but receiving no future support. I fully back developers being paid for their work, and when large companies make money from free labour it's only fair that they get a piece of the pie.
+The Open Source .NET landscape has changed recently with largely adopted packages opting to move towards a commercial license for future updates, with prior releases keeping their OSS license but receiving no further support. 
 
-This makes introducing new open source dependencies into your workflow a little more risky, or at least more people are now aware of the risk.
+I fully back developers being paid for their work, and when large companies make money from their free labour it's only fair that they get a piece of the pie too. However this makes introducing new open source dependencies into your workflow a little more risky, or at least more people are now aware of the risk.
 
-That said, Azure Key Vault is not an ever changing product (and by proxy the Emulator); by design the functionality rarely changes to ensure that no security regressions creep in. The Emulator will continue to receive bug fixes, API updates (if available) and general maintenance work but it is *stable* and will not demand 1000s of hours of continued free labour. It will never be commercialised (I'd be sued into an early grave if I tried anyway) and with the [prospect of .NET Foundation membership on the horizon](https://github.com/dotnet-foundation/projects/issues/441) my own personal bus factor decreases too.
+That said, Azure Key Vault is not an ever changing product (and by proxy the Emulator); by design the functionality rarely changes to ensure that no security regressions creep in. The Emulator will continue to receive bug fixes, API updates (if available) and general maintenance work but it is *stable* and will not demand 1000s of hours of continued work. It will never be commercialised (I'd be sued into an early grave if I tried anyway) and with the [prospect of .NET Foundation membership on the horizon](https://github.com/dotnet-foundation/projects/issues/441) my own personal bus factor decreases too.
 
 If you make use of the Azure Key Vault Emulator please be sure to ⭐ the [repository](https://github.com/james-gould/azure-keyvault-emulator) as it's one of many metrics that the .NET Foundation uses to validate project membership applications. 
 
