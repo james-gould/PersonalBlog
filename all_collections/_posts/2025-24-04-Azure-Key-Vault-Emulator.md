@@ -15,8 +15,6 @@ Or should I say... did not.
 
 *Dramatic pause.*
 
-## Introducing the Azure Key Vault Emulator
-
 The first stable release of the [Azure Key Vault Emulator](https://github.com/james-gould/azure-keyvault-emulator) has shipped and is now available for public consumption. Here's a quick rundown of what's available:
 
 - **Full support for the Azure SDK Key Vault Clients**, meaning you can use the official `SecretClient`, `KeyClient` and `CertificateClient` when using the emulator and simply switch the `VaultURI` in production.
