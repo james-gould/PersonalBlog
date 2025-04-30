@@ -9,7 +9,7 @@ Developing applications that require secure storage of sensitive data is difficu
 
 In a dev environment, currently, you need to have a **real** Azure Key Vault resource deployed and potentially being paid for in an active Azure subscription. If you're like me and work for a fairly large company then the security policies around accessing these resources can be tough to navigate, meaning long delays during onboarding and potentially longer delays caused by multiple developers overwriting each other's secure values.
 
-Microsoft have put significant effort into making the cloud development experience easier with .NET and have released emulated applications that face the same issue. The Azure Service Bus now has an official [Emulator](https://learn.microsoft.com/en-us/azure/service-bus-messaging/overview-emulator) to solve that problem for example, sadly Azure Key Vault does not have a similar alternative. 
+Microsoft have put significant effort into making the cloud development experience easier with .NET and have released emulators for products that face the same issue. The Azure Service Bus now has an official [Emulator](https://learn.microsoft.com/en-us/azure/service-bus-messaging/overview-emulator) to solve that problem for example, sadly Azure Key Vault does not have a similar alternative. 
 
 Or should I say... did not.
 
