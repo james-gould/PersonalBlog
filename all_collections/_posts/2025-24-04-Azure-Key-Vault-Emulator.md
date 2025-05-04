@@ -26,9 +26,9 @@ If you use, and like, the Emulator please make sure to ⭐ the repository. This 
 
 ## Getting started With the Emulator
 
-The Emulator runs as a [container](https://hub.docker.com/r/jamesgoulddev/azure-keyvault-emulator) on your local machine and can be accessed by setting your `VaultUri` to `https://localhost:4997`.
+The first run of the Emulator requires some initial environment setup, it takes less than 5 minutes (and under 1 minute if you're using `.NET Aspire`). You can find the [full documentation here](https://github.com/james-gould/azure-keyvault-emulator/blob/development/CONFIG.md).
 
-It's that easy... but it gets even easier.
+The Emulator runs as a [container](https://hub.docker.com/r/jamesgoulddev/azure-keyvault-emulator) on your local machine and can be accessed by setting your `VaultUri` to `https://localhost:4997`.
 
 If you're using `.NET Aspire` there's now built-in support for the emulator, meaning you can optionally override your  `IResourceBuilder<AzureKeyVaultResource>` to use the emulator.
 
