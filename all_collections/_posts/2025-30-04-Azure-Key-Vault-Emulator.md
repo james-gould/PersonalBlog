@@ -26,7 +26,7 @@ If you use, and like, the Emulator please make sure to ⭐ the repository. This 
 
 ## Getting started With the Emulator
 
-The first run of the Emulator requires some initial environment setup, it takes less than 5 minutes (and under 1 minute if you're using `.NET Aspire`). You can find the [full documentation here](https://github.com/james-gould/azure-keyvault-emulator/blob/development/CONFIG.md).
+The first run of the Emulator will ask if you wish to install a `localhost` SSL certificate - this is unique to your machine and is required for the Azure SDK to work correctly, [read more here if you want to learn more or provide your own certificates.](https://github.com/james-gould/azure-keyvault-emulator/blob/development/docs/CONFIG.md#configuring-your-local-system-for-the-emulator)
 
 The Emulator runs as a [container](https://hub.docker.com/r/jamesgoulddev/azure-keyvault-emulator) on your local machine and can be accessed by setting your `VaultUri` to `https://localhost:4997`.
 
