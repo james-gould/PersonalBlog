@@ -47,11 +47,11 @@ var keyVaultResourceName = "keyvault";
 
 // With existing resource
 var keyVault = builder
-    .AddAzureKeyVault(keyVaultServiceName)
+    .AddAzureKeyVault(keyVaultResourceName)
     .RunAsEmulator(); // Add this line
 
 // Or directly add the emulator as a resource, no configuration required
-var keyVault = builder.AddAzureKeyVaultEmulator(keyVaultServiceName);
+var keyVault = builder.AddAzureKeyVaultEmulator(keyVaultResourceName);
 
 var webApi = builder
     .AddProject<Projects.MyApi>("api")
