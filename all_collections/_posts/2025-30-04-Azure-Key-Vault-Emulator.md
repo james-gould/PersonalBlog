@@ -114,7 +114,7 @@ public async Task<string> GetSecretValue(string name)
 }
 ```
 
-It's **highly** recommended to check the execution environment at startup to prevent using the Azure Key Vault Emulator in production, which can be done like so:
+It's **highly** recommended to check the execution environment at startup to prevent using the Azure Key Vault Emulator in production, for example if you're using the `Client` library:
 
 ```cs
 var vaultUri = builder.Configuration.GetConnectionString("keyvault") ?? string.Empty;
@@ -136,7 +136,7 @@ My PR into the main `Aspire.Azure.Security.Client` package which adds support fo
 
 ## Final remarks
 
-First and foremost I want to thank [Basis Theory](https://github.com/Basis-Theory/azure-keyvault-emulator) for the original repository/codebase of which the Emulator then grew into its' current form. When trying to find a suitable emulator myself I stumbled across it but was sad to see it only supported a few operations and was archived.
+I want to thank [Basis Theory](https://github.com/Basis-Theory/azure-keyvault-emulator) for the original repository/codebase of which the Emulator then grew into its' current form. When trying to find a suitable emulator myself I stumbled across it but was sad to see it only supported a few operations and was archived.
 
 Prior to the stable release I got in touch with them to make sure that they were happy with the copyright retention and attribution back, but also to potentially add a redirect link from their archived repository to the now active one. They've been *incredibly* kind and communicative, so thank you to all of the team 💖.
 
