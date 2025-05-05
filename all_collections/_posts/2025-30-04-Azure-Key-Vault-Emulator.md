@@ -5,7 +5,7 @@ date: 2025-04-30
 categories: ["csharp", "dotnet", "github", "dotnet aspire"]
 ---
 
-![Azure Key Vault Emulator Introduction Hero](assets/images/kve-hero.png){:style="display:block; margin-left:auto; margin-right:auto"}
+![Azure Key Vault Emulator Introduction Hero](https://jamesgould.dev/assets/images/kve-hero.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
 Developing applications that require secure storage of sensitive data is difficult but it's the perfect use-case for Azure Key Vault. From API keys to entire certificates you can protect your sensitive data from being breached by opting for a battle-tested security product, but it can be a bit of a nightmare to develop an application for locally.
 
