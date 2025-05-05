@@ -5,6 +5,8 @@ date: 2025-04-30
 categories: ["csharp", "dotnet", "github", "dotnet aspire"]
 ---
 
+![Azure Key Vault Emulator Introduction Hero](assets/images/kve-hero.png){:style="display:block; margin-left:auto; margin-right:auto"}
+
 Developing applications that require secure storage of sensitive data is difficult but it's the perfect use-case for Azure Key Vault. From API keys to entire certificates you can protect your sensitive data from being breached by opting for a battle-tested security product, but it can be a bit of a nightmare to develop an application for locally.
 
 In a dev environment, currently, you need to have a **real** Azure Key Vault resource deployed and potentially being paid for in an active Azure subscription. If you're like me and work for a fairly large company then the security policies around accessing these resources can be tough to navigate, meaning long delays during onboarding and potentially longer delays caused by multiple developers overwriting each other's secure values.
