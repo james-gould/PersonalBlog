@@ -43,7 +43,7 @@ dotnet add package AzureKeyVaultEmulator.Aspire.Hosting
 Then add to or update your `AppHost` to run the Emulator:
 
 ```cs
-var keyVaultServiceName = "keyvault";
+var keyVaultResourceName = "keyvault";
 
 // With existing resource
 var keyVault = builder
@@ -58,7 +58,7 @@ var webApi = builder
     .WithReference(keyVault); // reference as normal
 ```
 
-This will inject the environment variable `ConnectionStrings__keyvault`, where `keyvault` is whatever value you assigned to `keyVaultServiceName` above.
+This will inject the environment variable `ConnectionStrings__keyvault`, where `keyvault` is whatever value you assigned to `keyVaultResourceName` above.
 
 When using `.RunAsEmulator()` the resource will no longer attempt to provision in your Azure subscription; the [Aspire team specifically made this change](https://www.reddit.com/r/dotnet/comments/1k7pr7l/comment/mp3ohum/) to support the Azure Key Vault Emulator which blew my mind.
 
