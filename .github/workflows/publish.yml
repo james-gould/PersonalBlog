@@ -18,7 +18,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '>=2.7'
+          ruby-version: '2.7'
 
       - name: Install Jekyll and Bundler
         run: |
@@ -36,5 +36,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           app_location: '/_site'
-          api_location: 'api'
+          api_location: ''
           output_location: '/_site'
