@@ -1,6 +1,6 @@
 ---
 layout: post
-title: .NET Aspire Integration Testing Quick Start
+title: Integration Testing Quick Start with .NET Aspire
 date: 2025-03-16
 categories: ["dotnet 8", "dotnet Aspire", "integration testing", "csharp"]
 ---
