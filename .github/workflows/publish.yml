@@ -36,3 +36,4 @@ jobs:
           app_location: '/_site'
           api_location: ''
           output_location: '/_site'
+          action: 'upload'
